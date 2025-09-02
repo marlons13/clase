@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reloj Pikachu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background-color: #fdf060;
+      font-family: 'Rubik', sans-serif;
+      overflow: hidden;
+    }
+
+    #background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: repeating-linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0.1) 0px,
+        rgba(255, 255, 255, 0.1) 4px,
+        transparent 4px,
+        transparent 40px
+      );
+      animation: slideRays 20s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes slideRays {
+      from { background-position: 0 0; }
+      to   { background-position: 600px 600px; }
+    }
+
+    #center-content {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      z-index: 2;
+      width: 100%;
+      padding: 0 5vw;
+      box-sizing: border-box;
+    }
+
+    #pikachu-icon {
+      width: 10vw;
+      max-width: 100px;
+      margin-bottom: -1vw;
+    }
+
+    #clock {
+      font-size: 14vw;
+      color: #000;
+      white-space: nowrap;
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    #clock span {
+      display: inline-block;
+      width: 2ch;
+      text-align: center;
+    }
+
+    #date {
+      font-size: 5vw;
+      margin-top: 1.5vw;
+      color: #E53935;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    #phrase {
+      font-family: 'Caveat', cursive;
+      font-size: 4.5vw;
+      margin-top: 1.5vw;
+      color: #333;
+      max-width: 90vw;
+      line-height: 1.4;
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+    }
+
+    #fullscreen-btn {
+      position: absolute;
+      top: 1vw;
+      right: 1vw;
+      cursor: pointer;
+      z-index: 3;
+      padding: 0.5vw;
+      background-color: rgba(255, 255, 255, 0.4);
+      border-radius: 10px;
+      transition: background 0.3s;
+    }
+
+    #fullscreen-btn:hover {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    #fullscreen-btn svg {
+      width: 2.5vw;
+      height: 2.5vw;
+      min-width: 24px;
+      min-height: 24px;
+    }
+
+    /* Menú desplegable */
+    #menu-toggle {
+      position: absolute;
+      top: 1vw;
+      left: 1vw;
+      cursor: pointer;
+      z-index: 4;
+      background: rgba(255, 255, 255, 0.5);
+      padding: 0.5vw;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+
+    #menu-toggle:hover {
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    #menu-toggle svg {
+      width: 2.5vw;
+      height: 2.5vw;
+      min-width: 24px;
+      min-height: 24px;
+    }
+
+    #menu {
+      position: absolute;
+      top: 4vw;
+      left: 1vw;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 10px;
+      padding: 1vw;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      z-index: 5;
+    }
+
+    #menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #menu li {
+      margin: 0.5vw 0;
+    }
+
+    #menu a {
+      text-decoration: none;
+      color: #222;
+      font-size: 1.2vw;
+      transition: color 0.2s;
+    }
+
+    #menu a:hover {
+      color: #e53935;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="background"></div>
+
+  <!-- Menú -->
+  <div id="menu-toggle">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 24 24">
+      <path d="M3 6h18M3 12h18M3 18h18" stroke="black" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <nav id="menu" class="hidden">
+    <ul>
+      <li><a href="temporizador.html" target="_blank">Temporizador</a></li>
+      <li><a href="classroom-secundaria.html" target="_blank">Aulas</a></li>
+      <li><a href="https://docs.google.com/spreadsheets/d/1Qs7yflC_P8yFWdRb4ZaHv4kIQXG0tMNdZR8xu7SK95c/edit?gid=0#gid=0" target="_blank">Horario</a></li>
+      <li><a href="https://kahoot.it/" target="_blank">Kahoot</a></li>
+    </ul>
+  </nav>
+
+  <!-- Botón pantalla completa -->
+  <div id="fullscreen-btn" title="Pantalla completa">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 24 24">
+      <path d="M3 3h6v2H5v4H3V3zm12 0h6v6h-2V5h-4V3zM5 13h2v4h4v2H5v-6zm14 0v6h-6v-2h4v-4h2z"/>
+    </svg>
+  </div>
+
+  <!-- Contenido principal -->
+  <div id="center-content">
+    <img id="pikachu-icon" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" alt="Pikachu" />
+    <div id="clock">
+      <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
+    </div>
+    <div id="date">Cargando fecha...</div>
+    <div id="phrase">¡El aprendizaje es un tesoro que te seguirá a todas partes!</div>
+  </div>
+
+  <script>
+    const dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+    const meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
+                   "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+
+    let prev = { h: '', m: '', s: '' };
+
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+
+      if (h !== prev.h) document.getElementById('hours').textContent = h;
+      if (m !== prev.m) document.getElementById('minutes').textContent = m;
+      if (s !== prev.s) document.getElementById('seconds').textContent = s;
+
+      prev = { h, m, s };
+
+      const diaSemana = dias[now.getDay()];
+      const diaMes = now.getDate();
+      const mes = meses[now.getMonth()];
+      const anio = now.getFullYear();
+      document.getElementById('date').textContent = `${diaSemana}, ${diaMes} de ${mes} de ${anio}`;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Pantalla completa
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    fullscreenBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        fullscreenBtn.classList.add('hidden');
+      }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+        fullscreenBtn.classList.remove('hidden');
+      }
+    });
+
+    // Menú
+    const menuBtn = document.getElementById('menu-toggle');
+    const menu = document.getElementById('menu');
+    menuBtn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+        menu.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
