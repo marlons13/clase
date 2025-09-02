@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Temporizador Pikachu ⚡</title>
+  <style>
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom right, #FFFDF5, #FFEFA1);
+  text-align: center;
+  color: #3C2F2F;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2vh 5vw;
+}
+
+h1 {
+  font-size: clamp(16px, 2.5vw, 22px); /* título discreto */
+  margin: 8px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.icono-pikachu {
+  width: clamp(25px, 5vw, 40px);
+  height: auto;
+}
+
+#temporizador {
+  font-size: clamp(80px, 20vh, 240px); /* aún más grande */
+  font-weight: bold;
+  color: #3C2F2F;
+  text-shadow: 4px 4px 12px rgba(255, 200, 0, 0.6), 
+               2px 2px 6px rgba(0,0,0,0.3);
+  margin: 10px 0;
+}
+
+.barra-wrapper {
+  position: relative;
+  width: 80%;
+  max-width: 600px;
+  margin: 0 auto 10px auto;
+  height: clamp(10px, 2vh, 18px); /* más fina */
+}
+
+#barra-contenedor {
+  width: 100%;
+  height: 100%;
+  background-color: #DDD3C3;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#barra-progreso {
+  height: 100%;
+  width: 100%;
+  background-color: #FFCC01;
+  transition: width 1s linear, background-color 0.5s;
+}
+
+#pikachu-corredor {
+  position: absolute;
+  top: -18px;
+  left: calc(100% - 20px);
+  width: clamp(28px, 6vw, 45px);
+  transition: left 1s linear;
+  z-index: 10;
+  pointer-events: none;
+}
+
+#mensaje-motivador {
+  margin-top: 5px;
+  font-size: clamp(14px, 2.5vw, 18px);
+  font-weight: 500;
+  color: #5C4033;
+  min-height: 25px;
+}
+
+/* Barra de control abajo */
+.controles {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+button {
+  background-color: #FFCC01;
+  color: #3C2F2F;
+  border: none;
+  padding: clamp(6px, 1.5vw, 10px) clamp(10px, 2vw, 16px);
+  font-size: clamp(12px, 2vw, 16px);
+  font-weight: bold;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background-color: #e0b800;
+}
+
+#tiempoInput {
+  height: clamp(30px, 6vw, 45px);
+  width: clamp(65px, 14vw, 90px);
+  font-size: clamp(12px, 2.5vw, 16px);
+  border-radius: 8px;
+  border: 2px solid #FFCC01;
+  text-align: center;
+}
+
+/* 📱 Ajustes móviles */
+@media (max-width: 600px) {
+  #temporizador {
+    font-size: 18vw;
+  }
+  .barra-wrapper {
+    height: 14px;
+  }
+  #pikachu-corredor {
+    top: -15px;
+  }
+  .controles {
+    flex-direction: row;
+  }
+  button {
+    flex: 1 1 40%;
+  }
+}
+
+/* 📽️ Ajustes proyectores (pantallas bajas) */
+@media (max-height: 800px) {
+  #temporizador {
+    font-size: clamp(70px, 18vh, 160px);
+  }
+  .barra-wrapper {
+    margin-bottom: 5px;
+  }
+}
+  </style>
+</head>
+<body>
+  <h1>
+    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" alt="Pikachu" class="icono-pikachu">
+    Temporizador Pikachu
+  </h1>
+
+  <div class="barra-wrapper">
+    <div id="barra-contenedor">
+      <div id="barra-progreso"></div>
+    </div>
+    <img id="pikachu-corredor" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/25.gif" alt="Pikachu Corriendo">
+  </div>
+
+  <div id="temporizador">00:00</div>
+
+  <div id="mensaje-motivador">¡Prepárate para darlo todo! 💪</div>
+
+  <div class="controles">
+    <input type="number" id="tiempoInput" min="1" placeholder="Minutos">
+    <button onclick="iniciarTemporizador()">▶️ Iniciar</button>
+    <button onclick="pausarTemporizador()">⏸️ Pausar</button>
+    <button onclick="reanudarTemporizador()">⏯️ Reanudar</button>
+    <button onclick="reiniciarTemporizador()">🔁 Reiniciar</button>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-contenido">
+      <img class="pikachu-modal" src="https://media.tenor.com/3Be0NZZQKZkAAAAC/pikachu-happy.gif" alt="Pikachu feliz">
+      <p>¡Tiempo completado!</p>
+      <button class="boton-modal" onclick="reiniciarTemporizador()">🔁 Reiniciar</button>
+    </div>
+  </div>
+
+  <div id="rayos-pikachu"></div>
+  <audio id="sonido-pika" src="https://vgmsite.com/soundtracks/pokemon-yellow-soundtrack/rcwyiytk/103%20-%20Pikachu%27s%20Cry.mp3" preload="auto"></audio>
+
+  <script>
+let tiempoTotal = 0;
+let tiempoRestante = 0;
+let intervalo = null;
+
+function iniciarTemporizador() {
+  const minutos = parseInt(document.getElementById("tiempoInput").value);
+  if (isNaN(minutos) || minutos <= 0) return;
+
+  tiempoTotal = minutos * 60;
+  tiempoRestante = tiempoTotal;
+
+  actualizarTemporizador();
+  actualizarBarra();
+
+  if (intervalo) clearInterval(intervalo);
+
+  intervalo = setInterval(() => {
+    if (tiempoRestante > 0) {
+      tiempoRestante--;
+      actualizarTemporizador();
+      actualizarBarra();
+    } else {
+      clearInterval(intervalo);
+      mostrarModal();
+    }
+  }, 1000);
+}
+
+function pausarTemporizador() {
+  clearInterval(intervalo);
+  intervalo = null;
+}
+
+function reanudarTemporizador() {
+  if (tiempoRestante > 0 && !intervalo) {
+    intervalo = setInterval(() => {
+      if (tiempoRestante > 0) {
+        tiempoRestante--;
+        actualizarTemporizador();
+        actualizarBarra();
+      } else {
+        clearInterval(intervalo);
+        mostrarModal();
+      }
+    }, 1000);
+  }
+}
+
+function reiniciarTemporizador() {
+  clearInterval(intervalo);
+  document.getElementById("tiempoInput").value = "";
+  document.getElementById("temporizador").textContent = "00:00";
+  document.getElementById("barra-progreso").style.width = "100%";
+  document.getElementById("modal").style.display = "none";
+  document.getElementById("mensaje-motivador").textContent = "¡Prepárate para darlo todo! 💪";
+  document.getElementById("pikachu-corredor").style.left = "calc(100% - 20px)";
+  document.getElementById("rayos-pikachu").classList.remove("rayos-activos");
+  tiempoTotal = 0;
+  tiempoRestante = 0;
+  intervalo = null;
+}
+
+function actualizarTemporizador() {
+  const minutos = Math.floor(tiempoRestante / 60).toString().padStart(2, "0");
+  const segundos = (tiempoRestante % 60).toString().padStart(2, "0");
+  document.getElementById("temporizador").textContent = `${minutos}:${segundos}`;
+}
+
+function actualizarBarra() {
+  const barra = document.getElementById("barra-progreso");
+  const pikachu = document.getElementById("pikachu-corredor");
+  const porcentaje = (tiempoRestante / tiempoTotal) * 100;
+
+  barra.style.width = porcentaje + "%";
+
+  if (porcentaje <= 30) {
+    barra.classList.add("rojo");
+    barra.classList.remove("naranja");
+  } else if (porcentaje <= 60) {
+    barra.classList.add("naranja");
+    barra.classList.remove("rojo");
+  } else {
+    barra.classList.remove("naranja", "rojo");
+  }
+
+  pikachu.style.left = `calc(${porcentaje}% - 20px)`;
+}
+
+function mostrarModal() {
+  document.getElementById("modal").style.display = "flex";
+
+  const pikachu = document.getElementById("pikachu-corredor");
+  pikachu.classList.add("pikachu-salto");
+
+  const audio = document.getElementById("sonido-pika");
+  if (audio) {
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+  }
+
+  const rayos = document.getElementById("rayos-pikachu");
+  rayos.classList.add("rayos-activos");
+
+  setTimeout(() => {
+    rayos.classList.remove("rayos-activos");
+    pikachu.classList.remove("pikachu-salto");
+  }, 1500);
+}
+  </script>
+</body>
+</html>
