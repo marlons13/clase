@@ -59,6 +59,17 @@ h1 {
   100% { transform: scale(1); }
 }
 
+/* 🔴 Alerta en los últimos segundos */
+.alerta {
+  color: red !important;
+  animation: parpadeo 1s infinite;
+}
+
+@keyframes parpadeo {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
 .barra-wrapper {
   position: relative;
   width: 80%;
@@ -166,7 +177,7 @@ button:hover {
 
 /* 🔹 Estilos para el modal */
 .modal {
-  display: none; /* Oculto al inicio */
+  display: none;
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.5);
@@ -313,6 +324,7 @@ function reiniciarTemporizador() {
   document.getElementById("mensaje-motivador").textContent = "¡Prepárate para darlo todo! 💪";
   document.getElementById("pikachu-corredor").style.left = "calc(100% - 20px)";
   document.getElementById("rayos-pikachu").classList.remove("rayos-activos");
+  document.getElementById("temporizador").classList.remove("alerta"); // quitar alerta
   tiempoTotal = 0;
   tiempoRestante = 0;
   intervalo = null;
@@ -325,10 +337,15 @@ function actualizarTemporizador() {
 
   temporizador.textContent = `${minutos}:${segundos}`;
 
-  // Animación en cada cambio
+  // Animación zoom
   temporizador.classList.remove("animar-numero");
   void temporizador.offsetWidth;
   temporizador.classList.add("animar-numero");
+
+  // 🔴 Activar parpadeo rojo si queda <10%
+  if (tiempoTotal > 0 && tiempoRestante / tiempoTotal <= 0.1) {
+    temporizador.classList.add("alerta");
+  }
 }
 
 function actualizarBarra() {
