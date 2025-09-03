@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Horario Pikachu ⚡</title>
+  <style>
+    :root{
+      --amarillo:#FFD93D;
+      --amarillo-osc:#FFC107;
+      --bg:linear-gradient(to bottom right, #FFFDF5, #FFEFA1);
+      --texto:#3C2F2F;
+    }
+
+    body{
+      font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;
+      background:var(--bg);
+      margin:0;
+      padding:20px;
+      text-align:center;
+      color:var(--texto);
+    }
+
+    /* ⬅ Botón Volver fijo arriba-izquierda */
+    .btn-volver{
+      position:fixed;
+      top:12px;
+      left:12px;
+      z-index:20;
+      padding:8px 14px;
+      background:var(--amarillo);
+      border-radius:10px;
+      text-decoration:none;
+      color:var(--texto);
+      font-weight:700;
+      box-shadow:0 2px 6px rgba(0,0,0,.18);
+    }
+    .btn-volver:hover{ background:var(--amarillo-osc); }
+
+    h1{
+      font-size:2rem;
+      margin:28px 0 16px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .icono-pikachu{ width:40px; height:auto; }
+
+    /* Controles centrados */
+    .controles{
+      margin:10px 0 20px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:24px;
+      flex-wrap:wrap;
+    }
+    .control-group{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    label{ font-weight:600; }
+    select,input[type="date"]{
+      padding:6px 10px;
+      border-radius:8px;
+      border:1px solid #ccc;
+      font-size:14px;
+      background:#fff;
+    }
+    .pista{
+      font-size:12px;
+      opacity:.8;
+      margin-top:-8px;
+      margin-bottom:10px;
+    }
+
+    .contenedor-horario{
+      max-width:95%;
+      margin:0 auto;
+      border-radius:20px;
+      box-shadow:0 4px 12px rgba(0,0,0,.15);
+      background:#fffdf0;
+      padding:12px;
+      overflow-x:auto;
+      position:relative;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:clamp(12px,1.5vw,16px);
+      position:relative;
+    }
+
+    th,td{
+      border:1px solid #ddd;
+      text-align:center;
+      min-width:100px;
+      padding:0;
+      vertical-align:middle;
+    }
+
+    th{
+      background-color:var(--amarillo);
+      color:var(--texto);
+      font-weight:700;
+      position:sticky;
+      top:0;
+      z-index:2;
+      padding:10px;
+    }
+
+    /* Columna de horas centrada */
+    #tabla-horario th:first-child,
+    #tabla-horario td:first-child{
+      background:#FFF8CC;
+      font-weight:700;
+      text-align:center;
+      white-space:nowrap;
+      padding:10px;
+    }
+
+    td{ background:#fff; }
+
+    /* Resaltados */
+    .dia-actual{ background-color:#FFF2A8 !important; }
+    .hora-actual{
+      background-color:#FFF7C2 !important; /* amarillo pastel suave */
+      font-weight:700;
+    }
+
+    /* Cada celda de aula es botón */
+    .aula-boton{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      width:100%;
+      height:100%;
+      padding:12px;
+      background:#fff;
+      color:var(--texto);
+      font-weight:700;
+      text-decoration:none;
+      box-shadow:inset 0 -1px 0 rgba(0,0,0,.05);
+      transition:.2s;
+      box-sizing:border-box;
+    }
+    .aula-boton:hover{
+      background:#FFF176;
+      box-shadow:inset 0 0 6px rgba(0,0,0,.1);
+    }
+    .nota{
+      font-size:11px;
+      color:#555;
+      margin-top:4px;
+    }
+
+    /* Botón flotante */
+    .btn-flotante{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      background:var(--amarillo);
+      border:none;
+      padding:12px 16px;
+      border-radius:50%;
+      font-size:18px;
+      cursor:pointer;
+      box-shadow:0 4px 8px rgba(0,0,0,.2);
+      transition:.2s;
+      z-index:15;
+    }
+    .btn-flotante:hover{ background:var(--amarillo-osc); transform:scale(1.1); }
+
+/* Botón modo oscuro arriba-derecha */
+.btn-dark{
+  position:fixed;
+  top:12px;
+  right:12px;
+  z-index:20;
+  padding:8px 12px;
+  border-radius:10px;
+  border:none;
+  background:var(--amarillo);
+  cursor:pointer;
+  font-size:18px;
+  box-shadow:0 2px 6px rgba(0,0,0,.18);
+}
+.btn-dark:hover{ background:var(--amarillo-osc); }
+
+/* 🌙 Estilos de modo oscuro */
+body.dark{
+  background:#1e1e1e;
+  color:#f5f5f5;
+}
+body.dark .contenedor-horario{
+  background:#2a2a2a;
+}
+body.dark th{
+  background:#444;
+  color:#f5f5f5;
+}
+body.dark #tabla-horario th:first-child,
+body.dark #tabla-horario td:first-child{
+  background:#333;
+  color:#f5f5f5;
+}
+body.dark td{
+  background:#2a2a2a;
+  color:#f5f5f5;
+}
+body.dark .aula-boton{
+  background:#333;
+  color:#f5f5f5;
+}
+body.dark .aula-boton:hover{
+  background:#555;
+}
+body.dark .dia-actual{
+  background:#555 !important;
+}
+body.dark .hora-actual{
+  background:#666 !important;
+}
+
+
+    /* Responsive */
+    @media (max-width:768px){
+      th,td{ font-size:12px; }
+      .aula-boton{ padding:8px; font-size:12px; }
+      #tabla-horario th:first-child, #tabla-horario td:first-child{ padding:8px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ⬅ Volver -->
+  <a href="index.html" class="btn-volver">⬅ Volver</a>
+  <!-- 🌙 Botón Modo Oscuro -->
+<button id="toggle-dark" class="btn-dark">🌙</button>
+
+
+  <h1>
+    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" alt="Pikachu" class="icono-pikachu">
+    Horario de Clases
+  </h1>
+
+  <!-- Controles -->
+  <div class="controles">
+    <div class="control-group">
+      <label for="filtro-dia">Filtrar por día</label>
+      <select id="filtro-dia">
+        <option value="todos">Todos</option>
+        <option value="1">Lunes</option>
+        <option value="2">Martes</option>
+        <option value="3">Miércoles</option>
+        <option value="4">Jueves</option>
+        <option value="5">Viernes</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label for="selector-fecha">Elegir fecha</label>
+      <input type="date" id="selector-fecha">
+    </div>
+  </div>
+  <div class="pista">💡 Clic derecho en una celda para agregar una nota rápida.</div>
+
+  <div class="contenedor-horario">
+    <table id="tabla-horario">
+      <thead>
+        <tr>
+          <th>Hora</th>
+          <th>Lunes</th>
+          <th>Martes</th>
+          <th>Miércoles</th>
+          <th>Jueves</th>
+          <th>Viernes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>08:00 - 08:50</td>
+          <td><a href="aula-wise.html" class="aula-boton">1RO COMPETITIVE</a></td>
+          <td><a href="aula-fair.html" class="aula-boton">2DO WISE</a></td>
+          <td><a href="aula-creative.html" class="aula-boton">2DO FAIR</a></td>
+          <td><a href="aula-gifted.html" class="aula-boton">1RO CREATIVE</a></td>
+          <td><a href="aula-happy.html" class="aula-boton">2DO GIFTED</a></td>
+        </tr>
+        <tr>
+          <td>08:50 - 09:40</td>
+          <td><a href="aula-kind.html" class="aula-boton">KIND</a></td>
+          <td><a href="aula-cool.html" class="aula-boton">COOL</a></td>
+          <td><a href="aula-strong.html" class="aula-boton">STRONG</a></td>
+          <td><a href="aula-nice.html" class="aula-boton">NICE</a></td>
+          <td><a href="aula-smart.html" class="aula-boton">SMART</a></td>
+        </tr>
+        <tr>
+          <td>10:10 - 11:00</td>
+          <td><a href="aula-fun.html" class="aula-boton">FUN</a></td>
+          <td><a href="aula-best.html" class="aula-boton">BEST</a></td>
+          <td><a href="aula-winner.html" class="aula-boton">WINNER</a></td>
+          <td><a href="aula-super.html" class="aula-boton">SUPER</a></td>
+          <td><a href="aula-bright.html" class="aula-boton">BRIGHT</a></td>
+        </tr>
+        <tr>
+          <td>11:00 - 11:50</td>
+          <td><a href="aula-wise.html" class="aula-boton">WISE</a></td>
+          <td><a href="aula-fair.html" class="aula-boton">FAIR</a></td>
+          <td><a href="aula-creative.html" class="aula-boton">CREATIVE</a></td>
+          <td><a href="aula-gifted.html" class="aula-boton">GIFTED</a></td>
+          <td><a href="aula-happy.html" class="aula-boton">HAPPY</a></td>
+        </tr>
+        <tr>
+          <td>11:50 - 12:40</td>
+          <td><a href="aula-kind.html" class="aula-boton">KIND</a></td>
+          <td><a href="aula-cool.html" class="aula-boton">COOL</a></td>
+          <td><a href="aula-strong.html" class="aula-boton">STRONG</a></td>
+          <td><a href="aula-nice.html" class="aula-boton">NICE</a></td>
+          <td><a href="aula-smart.html" class="aula-boton">SMART</a></td>
+        </tr>
+        <tr>
+          <td>13:10 - 14:00</td>
+          <td><a href="aula-fun.html" class="aula-boton">FUN</a></td>
+          <td><a href="aula-best.html" class="aula-boton">BEST</a></td>
+          <td><a href="aula-winner.html" class="aula-boton">WINNER</a></td>
+          <td><a href="aula-super.html" class="aula-boton">SUPER</a></td>
+          <td><a href="aula-bright.html" class="aula-boton">BRIGHT</a></td>
+        </tr>
+        <tr>
+          <td>14:00 - 14:50</td>
+          <td><a href="aula-wise.html" class="aula-boton">WISE</a></td>
+          <td><a href="aula-fair.html" class="aula-boton">FAIR</a></td>
+          <td><a href="aula-creative.html" class="aula-boton">CREATIVE</a></td>
+          <td><a href="aula-gifted.html" class="aula-boton">GIFTED</a></td>
+          <td><a href="aula-happy.html" class="aula-boton">HAPPY</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Botón flotante -->
+  <button class="btn-flotante" onclick="irAHoraActual()">⏱</button>
+
+  <script>
+    const horas = [
+      ["08:00","08:50"],
+      ["08:50","09:40"],
+      ["10:10","11:00"],
+      ["11:00","11:50"],
+      ["11:50","12:40"],
+      ["13:10","14:00"],
+      ["14:00","14:50"]
+    ];
+    const aMin = h=>parseInt(h.split(":")[0])*60+parseInt(h.split(":")[1]);
+
+    // Día actual
+    marcarDia(new Date().getDay());
+
+    // Resaltar hora actual
+    function resaltarHora(){
+      const ahora=new Date();
+      const actual=ahora.getHours()*60+ahora.getMinutes();
+      const filas=document.querySelectorAll("#tabla-horario tbody tr");
+      filas.forEach(f=>f.classList.remove("hora-actual"));
+      horas.forEach((r,i)=>{
+        const ini=aMin(r[0]), fin=aMin(r[1]);
+        if(actual>=ini && actual<fin){
+          filas[i].classList.add("hora-actual");
+        }
+      });
+    }
+    resaltarHora(); setInterval(resaltarHora,60000);
+
+    function irAHoraActual(){
+      const activa=document.querySelector(".hora-actual");
+      if(activa) activa.scrollIntoView({behavior:"smooth",block:"center"});
+    }
+
+    // Filtro día
+    function mostrarDia(val){
+      const filas=document.querySelectorAll("#tabla-horario tbody tr");
+      const cabecera=document.querySelectorAll("#tabla-horario thead th");
+      for(let i=0;i<cabecera.length;i++){
+        if(i===0){ cabecera[i].style.display=""; continue; } // siempre mostrar Hora
+        const mostrar=(val==="todos"||val==i);
+        cabecera[i].style.display=mostrar?"":"none";
+        filas.forEach(f=>{
+          const celdas=f.querySelectorAll("td");
+          if(celdas[i-1]) celdas[i-1].style.display=mostrar?"":"none";
+          if(celdas[0]) celdas[0].style.display=""; // siempre Hora
+        });
+      }
+    }
+    document.getElementById("filtro-dia").addEventListener("change",e=>mostrarDia(e.target.value));
+
+    // Selector de fecha corregido
+    document.getElementById("selector-fecha").addEventListener("change",e=>{
+      if(!e.target.value) return;
+      const [anio,mes,dia]=e.target.value.split("-").map(Number);
+      const fecha=new Date(anio,mes-1,dia); // fecha local correcta
+      marcarDia(fecha.getDay());
+    });
+
+    // Corregido: solo lunes a viernes
+    function marcarDia(dia){
+      document.querySelectorAll("#tabla-horario tr td, #tabla-horario tr th")
+              .forEach(c=>c.classList.remove("dia-actual"));
+      if(dia>=1&&dia<=5){
+        document.querySelectorAll("#tabla-horario tr").forEach(f=>{
+          const cel=f.querySelectorAll("td,th")[dia];
+          if(cel) cel.classList.add("dia-actual");
+        });
+      }
+    }
+
+    // 🌙 Modo oscuro con localStorage
+const btnDark=document.getElementById("toggle-dark");
+
+// cargar preferencia guardada
+if(localStorage.getItem("modoOscuro")==="true"){
+  document.body.classList.add("dark");
+  btnDark.textContent="☀️";
+}
+
+btnDark.addEventListener("click",()=>{
+  document.body.classList.toggle("dark");
+  const oscuro=document.body.classList.contains("dark");
+  btnDark.textContent=oscuro?"☀️":"🌙";
+  localStorage.setItem("modoOscuro",oscuro);
+});
+
+
+
+    // Notas rápidas
+    function keyNota(r,c){return `nota_r${r}_c${c}`;}
+    const filasTB=document.querySelectorAll("#tabla-horario tbody tr");
+    filasTB.forEach((tr,r)=>{
+      const celdas=tr.querySelectorAll("td");
+      for(let c=1;c<celdas.length;c++){
+        const td=celdas[c];
+        td.addEventListener("contextmenu",ev=>{
+          ev.preventDefault();
+          const aula=td.querySelector(".aula-boton");
+          if(!aula) return;
+          const k=keyNota(r,c);
+          const actual=localStorage.getItem(k)||"";
+          const nueva=prompt("Escribe una nota (vacío para borrar):",actual);
+          if(nueva===null) return;
+          if(nueva.trim()==="") localStorage.removeItem(k);
+          else localStorage.setItem(k,nueva.trim());
+          mostrarNotas();
+        });
+      }
+    });
+    function mostrarNotas(){
+      filasTB.forEach((tr,r)=>{
+        const celdas=tr.querySelectorAll("td");
+        for(let c=1;c<celdas.length;c++){
+          const td=celdas[c];
+          const aula=td.querySelector(".aula-boton");
+          if(!aula) continue;
+          aula.querySelectorAll(".nota").forEach(n=>n.remove());
+          const k=keyNota(r,c);
+          const nota=localStorage.getItem(k);
+          if(nota){
+            const d=document.createElement("div");
+            d.className="nota";
+            d.textContent=nota;
+            aula.appendChild(d);
+          }
+        }
+      });
+    }
+    mostrarNotas();
+
+    // Recordatorio automático
+    setInterval(()=>{
+      const ahora=new Date();
+      const actual=ahora.getHours()*60+ahora.getMinutes();
+      horas.forEach(r=>{
+        const ini=aMin(r[0]);
+        if(actual===ini-5){
+          alert("⏰ Próxima clase en 5 minutos: "+r[0]+" - "+r[1]);
+        }
+      });
+    },60000);
+  </script>
+</body>
+</html>
