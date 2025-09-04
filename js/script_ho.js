@@ -18,11 +18,11 @@ const horas = [
 
 // Aulas por día (1=Lunes ... 5=Viernes)
 const aulas = {
-  1:["WISE","KIND","FUN","WISE","KIND","FUN","WISE"],
-  2:["FAIR","COOL","BEST","FAIR","COOL","BEST","FAIR"],
-  3:["CREATIVE","STRONG","WINNER","CREATIVE","STRONG","WINNER","CREATIVE"],
-  4:["GIFTED","NICE","SUPER","GIFTED","NICE","SUPER","GIFTED"],
-  5:["HAPPY","SMART","BRIGHT","HAPPY","SMART","BRIGHT","HAPPY"]
+  1:["1RO COMPETITIVE","2DO KIND","3RO FAIR","3RO HONEST","1RO WISE","3RO KIND","3RO NOBLE"],
+  2:["2DO WISE","1RO LEADER","3RO COMPETITIVE","3RO POLITE","1RO NOBLE","3RO LEADER","3RO DOER"],
+  3:["2DO FAIR","1RO POLITE","1RO FAIR","3RO CHEERFUL","1RO HONEST","1RO GIFTED","3RO GIFTED"],
+  4:["1RO CREATIVE","3RO WISE","2DO CREATIVE","2DO NOBLE","2DO CHEERFUL","3RO CREATIVE","2DO COMPETITIVE"],
+  5:["2DO GIFTED","1RO DOER","2DO HONEST","2DO POLITE","1RO KIND","2DO DOER","1RO CHEERFUL"]
 };
 
 // Enlaces por aula (ajusta rutas luego)
@@ -349,3 +349,4 @@ window.addEventListener("DOMContentLoaded", ()=>{
     console.warn("API_URL no configurada: acciones de notas usarán localStorage hasta que pegues la URL de Apps Script.");
   }
 });
+
