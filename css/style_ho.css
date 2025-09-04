@@ -5,21 +5,38 @@
   --texto:#3C2F2F;
 }
 
-/* ===== ESTILO GENERAL ===== */
 body{
-  font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;
-  background:var(--bg);
+  font-family:Arial, sans-serif;
   margin:0;
-  padding:20px;
-  text-align:center;
+  padding:0;
+  background:var(--bg);
   color:var(--texto);
-  transition:background .3s,color .3s;
+  transition:.3s background, .3s color;
 }
 
-/* Botón Mostrar todos */
-.btn-todos{
+body.dark{
+  background:#1e1e1e;
+  color:#eee;
+}
+
+h1{
+  text-align:center;
+  margin:20px 0;
+  font-size:24px;
+}
+.icono-pikachu{ width:32px; vertical-align:middle; margin-right:8px; }
+
+.controles{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.control-group{ display:flex; align-items:center; gap:8px; }
+
+.btn-volver, .btn-dark, .btn-todos{
   padding:6px 12px;
-  margin-left:6px;
   border:none;
   border-radius:8px;
   background:var(--amarillo);
@@ -28,8 +45,13 @@ body{
   font-weight:600;
   box-shadow:0 2px 4px rgba(0,0,0,.15);
 }
-.btn-todos:hover{ background:var(--amarillo-osc); }
+.btn-volver{ position:absolute; top:10px; left:10px; }
+.btn-dark{ position:absolute; top:10px; right:10px; }
+.btn-todos:hover, .btn-volver:hover, .btn-dark:hover{
+  background:var(--amarillo-osc);
+}
 
+/* 📌 Mensaje dinámico */
 .mensaje-dia{
   margin:20px auto;
   padding:12px 18px;
@@ -43,263 +65,92 @@ body{
   box-shadow:0 2px 6px rgba(0,0,0,0.1);
   display:flex;
   align-items:center;
-  justify-content:center; /* ✅ centra horizontalmente */
-  gap:10px;
-  text-align:center;      /* ✅ asegura centrado del texto */
-}
-
-.mensaje-dia::before{
-  content:"🗓️";
-  font-size:18px;
-}
-
-body.dark .mensaje-dia{
-  background:#333;
-  color:#eee;
-  border-left:5px solid #FFA000;
-}
-
-/* Botón Volver */
-.btn-volver{
-  position:fixed;
-  top:12px;
-  left:12px;
-  z-index:20;
-  padding:8px 14px;
-  background:var(--amarillo);
-  border-radius:10px;
-  text-decoration:none;
-  color:var(--texto);
-  font-weight:700;
-  box-shadow:0 2px 6px rgba(0,0,0,.18);
-}
-.btn-volver:hover{ background:var(--amarillo-osc); }
-
-/* Botón Modo Oscuro */
-.btn-dark{
-  position:fixed;
-  top:12px;
-  right:12px;
-  z-index:20;
-  padding:8px 12px;
-  border-radius:10px;
-  border:none;
-  background:var(--amarillo);
-  cursor:pointer;
-  font-size:18px;
-  box-shadow:0 2px 6px rgba(0,0,0,.18);
-}
-.btn-dark:hover{ background:var(--amarillo-osc); }
-
-/* ===== ENCABEZADO ===== */
-h1{
-  font-size:2rem;
-  margin:28px 0 16px;
-  display:flex;
   justify-content:center;
-  align-items:center;
   gap:10px;
-  flex-wrap:wrap;
+  text-align:center;
 }
-.icono-pikachu{ width:40px; height:auto; }
+.mensaje-dia::before{ content:"🗓️"; font-size:18px; }
+body.dark .mensaje-dia{ background:#333; color:#eee; border-left:5px solid #FFA000; }
 
-/* ===== CONTROLES ===== */
-.controles{
-  margin:10px 0 20px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:24px;
-  flex-wrap:wrap;
+/* 📅 Agenda */
+.agenda{
+  max-width:800px;
+  margin:20px auto;
+  padding:0 15px; /* aire lateral extra */
 }
-.control-group{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-label{ font-weight:600; }
-select,input[type="date"]{
-  padding:6px 10px;
-  border-radius:8px;
-  border:1px solid #ccc;
-  font-size:14px;
+.bloque{
+  margin-bottom:16px;
+  padding:14px;
+  border-radius:10px;
   background:#fff;
-}
-.pista{
-  font-size:12px;
-  opacity:.8;
-  margin-top:-8px;
-  margin-bottom:10px;
-}
-
-/* ===== TABLA ===== */
-.contenedor-horario{
-  max-width:95%;
-  margin:0 auto;
-  border-radius:20px;
-  box-shadow:0 4px 12px rgba(0,0,0,.15);
-  background:#fffdf0;
-  padding:12px;
-  overflow-x:auto;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
   position:relative;
-  transition:background .3s;
 }
+body.dark .bloque{ background:#2d2d2d; }
+.bloque.hora-actual{ border:2px solid #FF8F00; animation:pulse 2s infinite; }
 
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:clamp(12px,1.5vw,16px);
-}
+.hora{ font-weight:700; margin-bottom:6px; }
+.dia{ font-size:14px; margin-top:4px; }
+.aula{ font-size:14px; font-weight:500; margin-top:2px; }
 
-th,td{
-  border:1px solid #ddd;
-  text-align:center;
-  min-width:100px;
-  padding:0;
-  vertical-align:middle;
-  transition:background .3s,color .3s;
-}
-
-th{
-  background-color:var(--amarillo);
-  color:var(--texto);
-  font-weight:700;
-  position:sticky;
-  top:0;
-  z-index:2;
-  padding:10px;
-}
-
-/* Columna Hora */
-#tabla-horario th:first-child,
-#tabla-horario td:first-child{
-  background:#FFF8CC;
-  font-weight:700;
-  text-align:center;
-  white-space:nowrap;
-  padding:10px;
-}
-
-td{ background:#fff; }
-
-/* ===== RESALTADOS ===== */
-/* Día actual */
-td.dia-actual .aula-boton{
-  background-color:#FFD54F !important; /* amarillo fuerte */
-  color:#000 !important;
-  font-weight:700;
-}
-
-/* Hora actual */
-td.hora-actual .aula-boton{
-  background-color:#FF8F00 !important; /* naranja oscuro visible */
-  color:#fff !important;
-  font-weight:700;
-  animation: pulse 2s infinite;
-}
-
-/* ===== ANIMACIÓN PULSE ===== */
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(255,143,0, 0.7); }
-  70% { box-shadow: 0 0 0 12px rgba(255,143,0, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255,143,0, 0); }
-}
-
-/* ===== BOTONES DE AULA ===== */
+/* 🔗 Aulas como botones */
 .aula-boton{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  width:100%;
-  height:100%;
-  padding:12px;
-  background:#fff;
-  color:var(--texto);
-  font-weight:700;
+  display:inline-block;
+  margin-left:6px;
+  padding:5px 12px;
+  border-radius:6px;
+  background:var(--amarillo);
+  color:#222;
   text-decoration:none;
-  box-shadow:inset 0 -1px 0 rgba(0,0,0,.05);
-  transition:.2s;
-  box-sizing:border-box;
+  font-weight:600;
+  box-shadow:0 1px 3px rgba(0,0,0,.15);
+  transition:.3s;
 }
 .aula-boton:hover{
-  background:#FFF176;
-  box-shadow:inset 0 0 6px rgba(0,0,0,.1);
+  background:var(--amarillo-osc);
+  color:#000;
 }
-.nota{
-  font-size:11px;
-  color:#555;
-  margin-top:4px;
+body.dark .aula-boton{
+  background:#444;
+  color:var(--amarillo);
+}
+body.dark .aula-boton:hover{
+  background:#666;
+  color:#fff;
 }
 
-/* ===== BOTÓN FLOTANTE ===== */
+/* 📝 Notas */
+.nota{
+  margin-top:6px;
+  font-size:13px;
+  color:#444;
+  background:#fff8e1;
+  padding:5px 8px;
+  border-radius:6px;
+  display:inline-block;
+  box-shadow:0 1px 2px rgba(0,0,0,.1);
+}
+body.dark .nota{ background:#444; color:#eee; }
+
+/* Botón flotante */
 .btn-flotante{
   position:fixed;
   bottom:20px;
   right:20px;
   background:var(--amarillo);
   border:none;
-  padding:12px 16px;
   border-radius:50%;
-  font-size:18px;
+  width:50px;
+  height:50px;
+  font-size:20px;
   cursor:pointer;
-  box-shadow:0 4px 8px rgba(0,0,0,.2);
-  transition:.2s;
-  z-index:15;
+  box-shadow:0 2px 6px rgba(0,0,0,.2);
 }
-.btn-flotante:hover{ background:var(--amarillo-osc); transform:scale(1.1); }
+.btn-flotante:hover{ background:var(--amarillo-osc); }
 
-/* ===== MODO OSCURO ===== */
-body.dark{
-  background:#1e1e1e;
-  color:#f5f5f5;
-}
-body.dark .contenedor-horario{
-  background:#2a2a2a;
-}
-body.dark th{
-  background:#444;
-  color:#f5f5f5;
-}
-body.dark #tabla-horario th:first-child,
-body.dark #tabla-horario td:first-child{
-  background:#333;
-  color:#f5f5f5;
-}
-body.dark td{
-  background:#2a2a2a;
-  color:#f5f5f5;
-}
-body.dark .aula-boton{
-  background:#333;
-  color:#f5f5f5;
-}
-body.dark .aula-boton:hover{
-  background:#555;
-}
-/* Día actual en oscuro */
-body.dark td.dia-actual .aula-boton{
-  background:#777 !important;
-  color:#fff !important;
-}
-/* Hora actual en oscuro */
-body.dark td.hora-actual .aula-boton{
-  background:#FFA000 !important; /* naranja brillante */
-  color:#fff !important;
-  animation: pulseDark 2s infinite;
-}
-
-/* Animación pulse en oscuro */
-@keyframes pulseDark {
-  0% { box-shadow: 0 0 0 0 rgba(255,160,0, 0.8); }
-  70% { box-shadow: 0 0 0 12px rgba(255,160,0, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255,160,0, 0); }
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width:768px){
-  th,td{ font-size:12px; }
-  .aula-boton{ padding:8px; font-size:12px; }
-  #tabla-horario th:first-child, 
-  #tabla-horario td:first-child{ padding:8px; }
+/* Animación */
+@keyframes pulse{
+  0%{ box-shadow:0 0 5px #FF8F00; }
+  50%{ box-shadow:0 0 15px #FF8F00; }
+  100%{ box-shadow:0 0 5px #FF8F00; }
 }
