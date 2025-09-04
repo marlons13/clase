@@ -27,13 +27,13 @@ const aulas = {
 
 // Enlaces por aula (ajusta rutas luego)
 const enlacesAulas = {
-  "WISE": "aulas/wise.html",
-  "KIND": "aulas/kind.html",
-  "FUN": "aulas/fun.html",
-  "FAIR": "aulas/fair.html",
-  "COOL": "aulas/cool.html",
-  "BEST": "aulas/best.html",
-  "CREATIVE": "aulas/creative.html",
+  "1RO COMPETITIVE": "aulas/wise.html",
+  "2DO KIND": "aulas/kind.html",
+  "3RO FAIR": "aulas/fun.html",
+  "3RO HONEST": "aulas/fair.html",
+  "1RO WISE": "aulas/cool.html",
+  "3RO KIND": "aulas/best.html",
+  "3RO NOBLE": "aulas/creative.html",
   "STRONG": "aulas/strong.html",
   "WINNER": "aulas/winner.html",
   "GIFTED": "aulas/gifted.html",
@@ -349,4 +349,5 @@ window.addEventListener("DOMContentLoaded", ()=>{
     console.warn("API_URL no configurada: acciones de notas usarán localStorage hasta que pegues la URL de Apps Script.");
   }
 });
+
 
