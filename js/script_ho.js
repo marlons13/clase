@@ -34,14 +34,35 @@ const enlacesAulas = {
   "1RO WISE": "aulas/cool.html",
   "3RO KIND": "aulas/best.html",
   "3RO NOBLE": "aulas/creative.html",
-  "STRONG": "aulas/strong.html",
-  "WINNER": "aulas/winner.html",
-  "GIFTED": "aulas/gifted.html",
-  "NICE": "aulas/nice.html",
-  "SUPER": "aulas/super.html",
-  "HAPPY": "aulas/happy.html",
-  "SMART": "aulas/smart.html",
-  "BRIGHT": "aulas/bright.html"
+  "2DO WISE": "aulas/strong.html",
+  "1RO LEADER": "aulas/winner.html",
+  "3RO COMPETITIVE": "aulas/gifted.html",
+  "3RO POLITE": "aulas/nice.html",
+  "1RO NOBLE": "aulas/super.html",
+  "3RO LEADER": "aulas/happy.html",
+  "3RO DOER": "aulas/smart.html",
+  "2DO FAIR": "aulas/bright.html",
+  "1RO POLITE": "aulas/bright.html",
+  "1RO FAIR": "aulas/bright.html",
+  "3RO CHEERFUL": "aulas/bright.html",
+  "1RO HONEST": "aulas/bright.html",
+  "1RO GIFTED": "aulas/bright.html",
+  "3RO GIFTED": "aulas/bright.html",
+  "1RO CREATIVE": "aulas/bright.html",
+  "3RO WISE": "aulas/bright.html",
+  "2DO CREATIVE": "aulas/bright.html",
+  "2DO NOBLE": "aulas/bright.html",
+  "2DO CHEERFUL": "aulas/bright.html",
+  "3RO CREATIVE": "aulas/bright.html",
+  "2DO COMPETITIVE": "aulas/bright.html",
+  "2DO GIFTED": "https://classroom.google.com/w/NzUwMzYyOTM3NTg3/t/all",
+  "1RO DOER": "https://classroom.google.com/w/NzM3ODI2NjU1ODUz/t/all",
+  "2DO HONEST": "https://classroom.google.com/w/NzM3ODI3NDc0NjE2/t/all",
+  "2DO POLITE": "https://classroom.google.com/w/NzUwMzY1NjE3NTA4/t/all",
+  "1RO KIND": "https://classroom.google.com/w/NzUwMzYyMDE2NDc4/t/all",
+  "2DO DOER": "https://classroom.google.com/w/NzUwMzY0Mjk2OTY2/t/all",
+  "1RO CHEERFUL": "https://classroom.google.com/w/NzM3ODI2ODQwODU4/t/all"
+  
 };
 
 // ---------------------------
@@ -349,5 +370,6 @@ window.addEventListener("DOMContentLoaded", ()=>{
     console.warn("API_URL no configurada: acciones de notas usarán localStorage hasta que pegues la URL de Apps Script.");
   }
 });
+
 
 
