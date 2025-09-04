@@ -1,7 +1,11 @@
-// ⚡ URL de tu Apps Script publicado
-const API_URL = "https://script.google.com/macros/s/AKfycbw1mS8LPlBvzBq0AJzx4fUIzGJ5--0s-L5Pf5Ya2m1xuBMZuk7-Ympt8CZZ4JeVEDTC1w/exec";
+// ---------------------------
+// CONFIG
+// ---------------------------
 
-// ⏰ Definir bloques horarios
+// URL de tu Apps Script (pon aquí tu URL)
+const API_URL = "https://script.google.com/macros/s/AKfycbxT-jWMtNJoVgcqR15LKCXnsSGvBnqyOeERldNSOrNx-nk9GGGmuIuZe2V80vc92Pz4GA/exec";
+
+// Bloques horarios (índices 0..6)
 const horas = [
   ["08:00","08:50"],
   ["08:50","09:40"],
@@ -12,238 +16,336 @@ const horas = [
   ["14:00","14:50"]
 ];
 
-const aMin = h => parseInt(h.split(":")[0])*60 + parseInt(h.split(":")[1]);
+// Aulas por día (1=Lunes ... 5=Viernes)
+const aulas = {
+  1:["WISE","KIND","FUN","WISE","KIND","FUN","WISE"],
+  2:["FAIR","COOL","BEST","FAIR","COOL","BEST","FAIR"],
+  3:["CREATIVE","STRONG","WINNER","CREATIVE","STRONG","WINNER","CREATIVE"],
+  4:["GIFTED","NICE","SUPER","GIFTED","NICE","SUPER","GIFTED"],
+  5:["HAPPY","SMART","BRIGHT","HAPPY","SMART","BRIGHT","HAPPY"]
+};
 
-// 📌 Resaltar el día actual
-marcarDia(new Date().getDay());
+// Enlaces por aula (ajusta rutas luego)
+const enlacesAulas = {
+  "WISE": "aulas/wise.html",
+  "KIND": "aulas/kind.html",
+  "FUN": "aulas/fun.html",
+  "FAIR": "aulas/fair.html",
+  "COOL": "aulas/cool.html",
+  "BEST": "aulas/best.html",
+  "CREATIVE": "aulas/creative.html",
+  "STRONG": "aulas/strong.html",
+  "WINNER": "aulas/winner.html",
+  "GIFTED": "aulas/gifted.html",
+  "NICE": "aulas/nice.html",
+  "SUPER": "aulas/super.html",
+  "HAPPY": "aulas/happy.html",
+  "SMART": "aulas/smart.html",
+  "BRIGHT": "aulas/bright.html"
+};
 
-// 📌 Resaltar la hora actual
+// ---------------------------
+// UTIL
+// ---------------------------
+function toMin(h){ return parseInt(h.split(":")[0])*60 + parseInt(h.split(":")[1]); }
+function diaNombre(num){ const dias=["","Lunes","Martes","Miércoles","Jueves","Viernes"]; return dias[num]||""; }
+function isApiConfigured(){ return API_URL && !API_URL.includes("XXXXXXXX"); }
+
+// ---------------------------
+// AGENDA: construcción dinámica
+// ---------------------------
+function generarAgenda(diaSel="todos"){
+  const agenda = document.getElementById("agenda");
+  if(!agenda) return console.warn("No se encontró #agenda en el DOM");
+  agenda.innerHTML = "";
+
+  horas.forEach((r,i)=>{
+    const bloque = document.createElement("div");
+    bloque.className = "bloque";
+    bloque.dataset.fila = i; // clave fila
+
+    // hora
+    const h = document.createElement("div");
+    h.className = "hora";
+    h.textContent = `${r[0]} - ${r[1]}`;
+    bloque.appendChild(h);
+
+    // si mostramos todos los días: creamos un .dia-item por cada día
+    if(diaSel === "todos"){
+      for(let d=1; d<=5; d++){
+        const diaItem = document.createElement("div");
+        diaItem.className = "dia-item";
+        diaItem.dataset.dia = d;
+
+        const label = document.createElement("span");
+        label.className = "dia";
+        label.textContent = `${diaNombre(d)}: `;
+
+        const aulaNombre = aulas[d][i];
+        const enlace = document.createElement("a");
+        enlace.className = "aula-boton";
+        enlace.href = enlacesAulas[aulaNombre] || "#";
+        enlace.textContent = aulaNombre;
+        enlace.setAttribute("aria-label", `${aulaNombre} - ${diaNombre(d)} ${r[0]}-${r[1]}`);
+
+        diaItem.appendChild(label);
+        diaItem.appendChild(enlace);
+        bloque.appendChild(diaItem);
+      }
+    } else {
+      // vista por día: un solo dia-item por bloque
+      const diaItem = document.createElement("div");
+      diaItem.className = "dia-item";
+      diaItem.dataset.dia = diaSel;
+
+      const aulaNombre = aulas[diaSel][i];
+      const enlace = document.createElement("a");
+      enlace.className = "aula-boton";
+      enlace.href = enlacesAulas[aulaNombre] || "#";
+      enlace.textContent = aulaNombre;
+      enlace.setAttribute("aria-label", `${aulaNombre} - ${diaNombre(diaSel)} ${r[0]}-${r[1]}`);
+
+      diaItem.appendChild(enlace);
+      bloque.appendChild(diaItem);
+    }
+
+    agenda.appendChild(bloque);
+  });
+
+  // una vez que la agenda está en el DOM:
+  resaltarHora();
+  attachContextHandlers(); // para cada .dia-item
+  cargarNotas(); // carga notas (desde API o local)
+}
+
+// ---------------------------
+// Resaltar hora actual
+// ---------------------------
 function resaltarHora(){
   const ahora = new Date();
   const actual = ahora.getHours()*60 + ahora.getMinutes();
-  const filas = document.querySelectorAll("#tabla-horario tbody tr");
-
-  filas.forEach(fila => {
-    fila.querySelectorAll("td").forEach(td => td.classList.remove("hora-actual"));
-  });
-
+  document.querySelectorAll(".bloque").forEach(b => b.classList.remove("hora-actual"));
   horas.forEach((r,i)=>{
-    const ini = aMin(r[0]), fin = aMin(r[1]);
-    if(actual >= ini && actual < fin){
-      filas[i].querySelectorAll("td").forEach(td => td.classList.add("hora-actual"));
+    if(actual >= toMin(r[0]) && actual < toMin(r[1])){
+      const b = document.querySelector(`.bloque[data-fila='${i}']`);
+      if(b) b.classList.add("hora-actual");
     }
   });
 }
-resaltarHora();
-setInterval(resaltarHora,60000);
+setInterval(resaltarHora, 60000);
 
-// 📌 Botón flotante → Ir a la hora actual
-function irAHoraActual(){
-  const activa = document.querySelector(".hora-actual");
-  if(activa) activa.scrollIntoView({behavior:"smooth", block:"center"});
-}
-
-// 📌 Mostrar mensaje dinámico
-function actualizarMensaje(diaSemana, fecha=null){
-  const mensaje = document.getElementById("mensaje-dia");
-  const dias = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
-
-  if(diaSemana >= 1 && diaSemana <= 5){
-    let texto = `Mostrando horario del ${dias[diaSemana]}`;
+// ---------------------------
+// CONTROLES / MENSAJE
+// ---------------------------
+function actualizarMensaje(diaSel, fecha=null){
+  const m = document.getElementById("mensaje-dia");
+  if(!m) return;
+  if(diaSel === "todos"){
+    m.textContent = "Mostrando agenda completa";
+  } else {
+    let texto = `Mostrando agenda del ${diaNombre(Number(diaSel))}`;
     if(fecha){
-      const opciones = { day:"numeric", month:"long", year:"numeric" };
-      texto += ` (${fecha.toLocaleDateString("es-ES", opciones)})`;
+      const opts = { day:"numeric", month:"long", year:"numeric" };
+      texto += ` (${fecha.toLocaleDateString("es-ES", opts)})`;
     }
-    mensaje.textContent = texto;
-  } else {
-    mensaje.textContent = "Mostrando horario completo";
+    m.textContent = texto;
   }
 }
 
-// 📌 Filtro de día
-function mostrarDia(val){
-  const filas = document.querySelectorAll("#tabla-horario tbody tr");
-  const cabeceras = document.querySelectorAll("#tabla-horario thead th");
-
-  if(val === "todos"){
-    cabeceras.forEach(th => th.style.display = "");
-    filas.forEach(fila=>{
-      fila.querySelectorAll("td").forEach(td => td.style.display = "");
-    });
-    actualizarMensaje(0);
-    return;
-  }
-
-  const colSeleccionada = parseInt(val);
-
-  cabeceras.forEach((th,i)=>{
-    if(i === 0){ 
-      th.style.display = "";
-    }else{
-      th.style.display = (i === colSeleccionada) ? "" : "none";
-    }
+// ---------------------------
+// HANDLERS: contexto para cada dia-item
+// ---------------------------
+function attachContextHandlers(){
+  // eliminar handlers previos (si hay)
+  document.querySelectorAll(".dia-item").forEach(item => {
+    item.oncontextmenu = null;
   });
 
-  filas.forEach(fila=>{
-    fila.querySelectorAll("td").forEach((td,j)=>{
-      if(j === 0){
-        td.style.display = "";
-      }else{
-        td.style.display = (j === colSeleccionada) ? "" : "none";
+  // asignar nuevo handler
+  document.querySelectorAll(".dia-item").forEach(item => {
+    item.addEventListener("contextmenu", async ev => {
+      ev.preventDefault();
+      const dia = item.dataset.dia;                 // 1..5
+      const fila = item.closest(".bloque").dataset.fila;
+      // nota actual (si existe)
+      const existente = item.querySelector(".nota")?.textContent || "";
+      const nueva = prompt(`Nota para ${diaNombre(Number(dia))} — ${horas[fila][0]}:`, existente);
+      if(nueva === null) return; // cancel
+      if(!isApiConfigured()){
+        // fallback a localStorage
+        guardarNotaLocal(Number(fila), Number(dia), nueva.trim());
+        await cargarNotasLocal();
+        return;
       }
+      await guardarNota(Number(fila), Number(dia), nueva.trim());
     });
   });
-
-  actualizarMensaje(colSeleccionada);
-}
-document.getElementById("filtro-dia").addEventListener("change",e=>{
-  mostrarDia(e.target.value);
-});
-
-// 📌 Botón "Mostrar todos"
-document.getElementById("btn-todos").addEventListener("click",()=>{
-  document.getElementById("filtro-dia").value="todos";
-  mostrarDia("todos");
-});
-
-// 📌 Selector de fecha (sincronizado con filtro de día)
-document.getElementById("selector-fecha").addEventListener("change",e=>{
-  if(!e.target.value) return;
-  const [anio,mes,dia] = e.target.value.split("-").map(Number);
-  const fecha = new Date(anio,mes-1,dia);
-  const diaSemana = fecha.getDay();
-  marcarDia(diaSemana);
-
-  if(diaSemana >= 1 && diaSemana <= 5){
-    document.getElementById("filtro-dia").value = diaSemana;
-    mostrarDia(String(diaSemana));
-  } else {
-    document.getElementById("filtro-dia").value = "todos";
-    mostrarDia("todos");
-  }
-
-  actualizarMensaje(diaSemana, fecha);
-});
-
-// 📌 Marcar día
-function marcarDia(dia){
-  document.querySelectorAll("#tabla-horario tr td, #tabla-horario tr th")
-          .forEach(c=>c.classList.remove("dia-actual"));
-
-  if(dia>=1 && dia<=5){
-    document.querySelectorAll("#tabla-horario tr").forEach(f=>{
-      const cel = f.querySelectorAll("td,th")[dia];
-      if(cel) cel.classList.add("dia-actual");
-    });
-  }
 }
 
-// 📌 ================== Notas rápidas con Google Sheets ==================
+// ---------------------------
+// NOTAS: compatibilidad API <-> DOM
+// ---------------------------
+
+// cargar notas (desde Google Sheets si API_URL configurada; sino desde localStorage)
 async function cargarNotas(){
+  if(!isApiConfigured()){
+    return cargarNotasLocal();
+  }
+
   try{
     const res = await fetch(API_URL);
-    const notas = await res.json();
+    const notas = await res.json(); // espera [{fila: "0", dia: "1", nota:"..."}, ...]
 
-    // limpiar todas las notas
-    document.querySelectorAll(".nota").forEach(n=>n.remove());
+    // limpiar notas previas
+    document.querySelectorAll(".nota").forEach(n => n.remove());
 
-    notas.forEach(n=>{
-      const td = document.querySelector(
-        `#tabla-horario tbody tr:nth-child(${parseInt(n.fila)+1}) td:nth-child(${parseInt(n.columna)+1})`
-      );
-      if(td){
-        const aula = td.querySelector(".aula-boton");
-        if(aula && n.nota){
-          const d = document.createElement("div");
-          d.className = "nota";
-          d.textContent = n.nota;
-          aula.appendChild(d);
-        }
+    const filtro = document.getElementById("filtro-dia")?.value || "todos";
+
+    notas.forEach(n => {
+      // n.fila, n.dia, n.nota (pueden venir como strings)
+      const fila = String(n.fila);
+      const dia  = String(n.dia);
+      const texto = n.nota;
+
+      // Buscar el dia-item correspondiente
+      const selector = `.bloque[data-fila='${fila}'] .dia-item[data-dia='${dia}']`;
+      const diaItem = document.querySelector(selector);
+
+      if(!diaItem) return; // no existe la celda visible (ej. notas con dia=2 pero estás mostrando solo dia=3)
+
+      if(texto && texto.trim() !== ""){
+        const d = document.createElement("div");
+        d.className = "nota";
+        d.textContent = texto;
+        diaItem.appendChild(d);
       }
     });
   }catch(err){
-    console.error("Error cargando notas:",err);
+    console.error("Error cargando notas (API):", err);
   }
 }
 
-async function guardarNota(fila,columna,nota){
+// guardar nota en Google Sheets via API
+async function guardarNota(fila, dia, nota){
+  // si nota vacía -> borrar (en Apps Script actualmente se guarda vacía; podrías ajustar para borrar fila)
   try{
-    await fetch(API_URL,{
-      method:"POST",
-      body: JSON.stringify({fila,columna,nota})
+    await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({ fila, dia, nota })
     });
     await cargarNotas();
   }catch(err){
-    console.error("Error guardando nota:",err);
+    console.error("Error guardando nota (API):", err);
+    alert("No se pudo guardar la nota en el servidor (revisa consola).");
   }
 }
 
-// Asignar clic derecho a cada celda
-const filasTB = document.querySelectorAll("#tabla-horario tbody tr");
-filasTB.forEach((tr,r)=>{
-  const celdas = tr.querySelectorAll("td");
-  for(let c=1; c<celdas.length; c++){
-    const td = celdas[c];
-    td.addEventListener("contextmenu",async ev=>{
-      ev.preventDefault();
-      const aula = td.querySelector(".aula-boton");
-      if(!aula) return;
-      const fila = r;   // índice de fila
-      const columna = c; // índice de columna
-      const actual = aula.querySelector(".nota")?.textContent || "";
-      const nueva = prompt("Escribe una nota (vacío para borrar):", actual);
-      if(nueva === null) return;
-      await guardarNota(fila,columna,nueva.trim());
-    });
-  }
-});
+// ---------------------------
+// FALLBACK: localStorage (si no hay API_URL)
+// ---------------------------
+function keyLocal(fila, dia){ return `nota_f${fila}_d${dia}`; }
 
-// 📌 Recordatorio automático
-setInterval(()=>{
-  const ahora = new Date();
-  const actual = ahora.getHours()*60 + ahora.getMinutes();
-  horas.forEach(r=>{
-    const ini = aMin(r[0]);
-    if(actual === ini-5){
-      alert("⏰ Próxima clase en 5 minutos: " + r[0] + " - " + r[1]);
+function guardarNotaLocal(fila, dia, nota){
+  if(!nota || nota.trim() === "") {
+    localStorage.removeItem(keyLocal(fila,dia));
+  } else {
+    localStorage.setItem(keyLocal(fila,dia), nota.trim());
+  }
+  console.log("Nota guardada localmente:", fila, dia, nota);
+}
+
+async function cargarNotasLocal(){
+  // limpiar previas
+  document.querySelectorAll(".nota").forEach(n => n.remove());
+
+  document.querySelectorAll(".bloque").forEach(b => {
+    const fila = b.dataset.fila;
+    // buscar cada dia-item dentro del bloque
+    b.querySelectorAll(".dia-item").forEach(di => {
+      const dia = di.dataset.dia;
+      const k = keyLocal(fila, dia);
+      const nota = localStorage.getItem(k);
+      if(nota){
+        const d = document.createElement("div");
+        d.className = "nota";
+        d.textContent = nota;
+        di.appendChild(d);
+      }
+    });
+  });
+}
+
+// ---------------------------
+// DOMContentLoaded: inicialización y listeners
+// ---------------------------
+window.addEventListener("DOMContentLoaded", ()=>{
+  // controles
+  const filtro = document.getElementById("filtro-dia");
+  const btnTodos = document.getElementById("btn-todos");
+  const selectorFecha = document.getElementById("selector-fecha");
+  const btnDark = document.getElementById("toggle-dark");
+
+  // eventos
+  filtro?.addEventListener("change", e => {
+    const val = e.target.value;
+    generarAgenda(val);
+    actualizarMensaje(val);
+  });
+
+  btnTodos?.addEventListener("click", ()=>{
+    if(filtro) filtro.value = "todos";
+    generarAgenda("todos");
+    actualizarMensaje("todos");
+  });
+
+  selectorFecha?.addEventListener("change", e=>{
+    if(!e.target.value) return;
+    const [y,m,d] = e.target.value.split("-").map(Number);
+    const fecha = new Date(y, m-1, d);
+    const dia = fecha.getDay();
+    if(dia >=1 && dia <=5){
+      if(filtro) filtro.value = dia;
+      generarAgenda(dia);
+      actualizarMensaje(dia, fecha);
+    } else {
+      if(filtro) filtro.value = "todos";
+      generarAgenda("todos");
+      actualizarMensaje("todos", fecha);
     }
   });
-},60000);
 
-// 📌 🌙 Modo oscuro
-const btnDark = document.getElementById("toggle-dark");
-if(localStorage.getItem("modoOscuro")==="true"){
-  document.body.classList.add("dark");
-  btnDark.textContent="☀️";
-}
-btnDark.addEventListener("click",()=>{
-  document.body.classList.toggle("dark");
-  const oscuro=document.body.classList.contains("dark");
-  btnDark.textContent = oscuro ? "☀️" : "🌙";
-  localStorage.setItem("modoOscuro", oscuro);
-});
+  // modo oscuro persistente
+  if(localStorage.getItem("modoOscuro") === "true"){
+    document.body.classList.add("dark");
+    if(btnDark) btnDark.textContent = "☀️";
+  }
+  btnDark?.addEventListener("click", ()=>{
+    document.body.classList.toggle("dark");
+    const oscuro = document.body.classList.contains("dark");
+    btnDark.textContent = oscuro ? "☀️" : "🌙";
+    localStorage.setItem("modoOscuro", oscuro ? "true" : "false");
+  });
 
-// 📌 Fecha actual automática
-window.addEventListener("DOMContentLoaded",()=>{
+  // fecha inicial y generación
   const hoy = new Date();
   const yyyy = hoy.getFullYear();
   const mm = String(hoy.getMonth()+1).padStart(2,"0");
   const dd = String(hoy.getDate()).padStart(2,"0");
-  document.getElementById("selector-fecha").value = `${yyyy}-${mm}-${dd}`;
+  if(selectorFecha) selectorFecha.value = `${yyyy}-${mm}-${dd}`;
 
-  const diaSemana = hoy.getDay();
-  marcarDia(diaSemana);
-
-  if(diaSemana >= 1 && diaSemana <= 5){
-    document.getElementById("filtro-dia").value = diaSemana;
-    mostrarDia(String(diaSemana));
+  const diaHoy = hoy.getDay();
+  if(diaHoy >=1 && diaHoy <=5){
+    if(filtro) filtro.value = diaHoy;
+    generarAgenda(diaHoy);
+    actualizarMensaje(diaHoy, hoy);
   } else {
-    document.getElementById("filtro-dia").value = "todos";
-    mostrarDia("todos");
+    if(filtro) filtro.value = "todos";
+    generarAgenda("todos");
+    actualizarMensaje("todos", hoy);
   }
 
-  actualizarMensaje(diaSemana, hoy);
-
-  // cargar notas iniciales desde Sheets
-  cargarNotas();
+  // si no hay API configurada, avisamos (solo una vez)
+  if(!isApiConfigured()){
+    console.warn("API_URL no configurada: acciones de notas usarán localStorage hasta que pegues la URL de Apps Script.");
+  }
 });
