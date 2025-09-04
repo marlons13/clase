@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Horario Pikachu ⚡</title>
+  <title>Agenda de Clases Pikachu ⚡</title>
   <link rel="stylesheet" href="css/style_ho.css">
 </head>
 <body>
@@ -14,7 +14,7 @@
 
   <h1>
     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" alt="Pikachu" class="icono-pikachu">
-    Horario de Clases
+    Agenda de Clases
   </h1>
 
   <!-- Controles -->
@@ -36,81 +36,12 @@
       <input type="date" id="selector-fecha">
     </div>
   </div>
-  <div class="pista">💡 Clic derecho en una celda para agregar una nota rápida.</div>
-<div id="mensaje-dia" class="mensaje-dia"></div>
-  <!-- Tabla -->
-  <div class="contenedor-horario">
-    <table id="tabla-horario">
-      <thead>
-        <tr>
-          <th>Hora</th>
-          <th>Lunes</th>
-          <th>Martes</th>
-          <th>Miércoles</th>
-          <th>Jueves</th>
-          <th>Viernes</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>08:00 - 08:50</td>
-          <td><a href="aula-wise.html" class="aula-boton">WISE</a></td>
-          <td><a href="aula-fair.html" class="aula-boton">FAIR</a></td>
-          <td><a href="aula-creative.html" class="aula-boton">CREATIVE</a></td>
-          <td><a href="aula-gifted.html" class="aula-boton">GIFTED</a></td>
-          <td><a href="aula-happy.html" class="aula-boton">HAPPY</a></td>
-        </tr>
-        <tr>
-          <td>08:50 - 09:40</td>
-          <td><a href="aula-kind.html" class="aula-boton">KIND</a></td>
-          <td><a href="aula-cool.html" class="aula-boton">COOL</a></td>
-          <td><a href="aula-strong.html" class="aula-boton">STRONG</a></td>
-          <td><a href="aula-nice.html" class="aula-boton">NICE</a></td>
-          <td><a href="aula-smart.html" class="aula-boton">SMART</a></td>
-        </tr>
-        <tr>
-          <td>10:10 - 11:00</td>
-          <td><a href="aula-fun.html" class="aula-boton">FUN</a></td>
-          <td><a href="aula-best.html" class="aula-boton">BEST</a></td>
-          <td><a href="aula-winner.html" class="aula-boton">WINNER</a></td>
-          <td><a href="aula-super.html" class="aula-boton">SUPER</a></td>
-          <td><a href="aula-bright.html" class="aula-boton">BRIGHT</a></td>
-        </tr>
-        <tr>
-          <td>11:00 - 11:50</td>
-          <td><a href="aula-wise.html" class="aula-boton">WISE</a></td>
-          <td><a href="aula-fair.html" class="aula-boton">FAIR</a></td>
-          <td><a href="aula-creative.html" class="aula-boton">CREATIVE</a></td>
-          <td><a href="aula-gifted.html" class="aula-boton">GIFTED</a></td>
-          <td><a href="aula-happy.html" class="aula-boton">HAPPY</a></td>
-        </tr>
-        <tr>
-          <td>11:50 - 12:40</td>
-          <td><a href="aula-kind.html" class="aula-boton">KIND</a></td>
-          <td><a href="aula-cool.html" class="aula-boton">COOL</a></td>
-          <td><a href="aula-strong.html" class="aula-boton">STRONG</a></td>
-          <td><a href="aula-nice.html" class="aula-boton">NICE</a></td>
-          <td><a href="aula-smart.html" class="aula-boton">SMART</a></td>
-        </tr>
-        <tr>
-          <td>13:10 - 14:00</td>
-          <td><a href="aula-fun.html" class="aula-boton">FUN</a></td>
-          <td><a href="aula-best.html" class="aula-boton">BEST</a></td>
-          <td><a href="aula-winner.html" class="aula-boton">WINNER</a></td>
-          <td><a href="aula-super.html" class="aula-boton">SUPER</a></td>
-          <td><a href="aula-bright.html" class="aula-boton">BRIGHT</a></td>
-        </tr>
-        <tr>
-          <td>14:00 - 14:50</td>
-          <td><a href="aula-wise.html" class="aula-boton">WISE</a></td>
-          <td><a href="aula-fair.html" class="aula-boton">FAIR</a></td>
-          <td><a href="aula-creative.html" class="aula-boton">CREATIVE</a></td>
-          <td><a href="aula-gifted.html" class="aula-boton">GIFTED</a></td>
-          <td><a href="aula-happy.html" class="aula-boton">HAPPY</a></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+
+  <!-- 📌 Mensaje dinámico -->
+  <div id="mensaje-dia" class="mensaje-dia"></div>
+
+  <!-- 📅 Agenda -->
+  <div id="agenda" class="agenda"></div>
 
   <!-- Botón flotante -->
   <button class="btn-flotante" onclick="irAHoraActual()">⏱</button>
