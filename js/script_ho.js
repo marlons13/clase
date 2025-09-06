@@ -2,8 +2,8 @@
 // CONFIG
 // ---------------------------
 
-// URL de tu Apps Script (pon aquí tu URL)
-const API_URL = "https://script.google.com/macros/s/AKfycbxT-jWMtNJoVgcqR15LKCXnsSGvBnqyOeERldNSOrNx-nk9GGGmuIuZe2V80vc92Pz4GA/exec";
+// URL de tu Apps Script (pon aquí tu URL real)
+const API_URL = "https://script.google.com/macros/s/XXXXXXXXXXXX/exec";
 
 // Bloques horarios (índices 0..6)
 const horas = [
@@ -25,13 +25,13 @@ const aulas = {
   5:["2DO GIFTED","1RO DOER","2DO HONEST","2DO POLITE","1RO KIND","2DO DOER","1RO CHEERFUL"]
 };
 
-// Enlaces por aula (ajusta rutas luego)
+// Enlace principal por aula
 const enlacesAulas = {
   "1RO COMPETITIVE": "https://classroom.google.com/w/NzM3ODI3MjU3OTYz/t/all",
   "2DO KIND": "https://classroom.google.com/w/NzM3ODI3NzYzOTM5/t/all",
   "3RO FAIR": "https://classroom.google.com/w/NzUwMzY2Mjk1Mjkw/t/all",
   "3RO HONEST": "https://classroom.google.com/w/NzM3ODI5MTUzODM3/t/all",
-  "1RO WISE": "https://classroom.google.com/w/NzM3ODI3MDc4MTQ0/t/all",
+  "1RO WISE": "https://classroom.google.com/w/NzM3ODI5MTUzODM3/t/all",
   "3RO KIND": "https://classroom.google.com/w/NzM3ODI3ODE1Njk2/t/all",
   "3RO NOBLE": "https://classroom.google.com/w/NzUwMzY5NjgzODQ1/t/all",
   "2DO WISE": "https://classroom.google.com/w/NzM3ODI4MDUzNDkx/t/all",
@@ -62,7 +62,123 @@ const enlacesAulas = {
   "1RO KIND": "https://classroom.google.com/w/NzUwMzYyMDE2NDc4/t/all",
   "2DO DOER": "https://classroom.google.com/w/NzUwMzY0Mjk2OTY2/t/all",
   "1RO CHEERFUL": "https://classroom.google.com/w/NzM3ODI2ODQwODU4/t/all"
-  
+};
+
+// Enlaces de calificaciones
+const enlacesCalificaciones = {
+  "1RO COMPETITIVE": "https://classroom.google.com/c/NzM3ODI3MjU3OTYz/gb/sort-last-name/default",
+  "2DO KIND": "https://classroom.google.com/c/NzM3ODI3NzYzOTM5/gb/sort-last-name/default",
+  "3RO FAIR": "https://classroom.google.com/c/NzUwMzY2Mjk1Mjkw/gb/sort-name/default",
+  "3RO HONEST": "https://classroom.google.com/c/NzM3ODI5MTUzODM3/gb/sort-name/default",
+  "1RO WISE": "https://classroom.google.com/c/NzM3ODI5MTUzODM3/gb/sort-name/default",
+  "3RO KIND": "https://classroom.google.com/c/NzM3ODI3ODE1Njk2/gb/sort-name/default",
+  "3RO NOBLE": "https://classroom.google.com/c/NzUwMzY5NjgzODQ1/gb/sort-name/default",
+  "2DO WISE": "https://classroom.google.com/c/NzM3ODI4MDUzNDkx/gb/sort-name/default",
+  "1RO LEADER": "https://classroom.google.com/c/NzUxOTExMjU2ODcz/gb/sort-name/default",
+  "3RO COMPETITIVE": "https://classroom.google.com/c/NzM3ODI3NzQwNTk5/gb/sort-name/default",
+  "3RO POLITE": "https://classroom.google.com/c/NzUwMzYzOTg2NTUw/gb/sort-name/default",
+  "1RO NOBLE": "https://classroom.google.com/c/NzUwMzYyMjg1MTIx/gb/sort-name/default",
+  "3RO LEADER": "https://classroom.google.com/c/Njg4NzE4OTUxNzgw/gb/sort-name/default",
+  "3RO DOER": "https://classroom.google.com/c/NzM3ODI3Njk4MjA5/gb/sort-name/default",
+  "2DO FAIR": "https://classroom.google.com/c/NzM3ODI3ODA4MDMw/gb/sort-name/default",
+  "1RO POLITE": "https://classroom.google.com/c/NzUwMzYwMTM3NDIx/gb/sort-name/default",
+  "1RO FAIR": "https://classroom.google.com/c/NzM3ODI3NDU2MTcy/gb/sort-name/default",
+  "3RO CHEERFUL": "https://classroom.google.com/c/NzM3ODI4ODE1NzM0/gb/sort-name/default",
+  "1RO HONEST": "https://classroom.google.com/c/NzUwMzU5NjI2NjY3/gb/sort-name/default",
+  "1RO GIFTED": "https://classroom.google.com/c/NzM3ODI3MTY0Njk4/gb/sort-name/default",
+  "3RO GIFTED": "https://classroom.google.com/c/NzM3ODI4MDU4OTA3/gb/sort-name/default",
+  "1RO CREATIVE": "https://classroom.google.com/c/NzM3ODI3NDMyOTg0/gb/sort-name/default",
+  "3RO WISE": "https://classroom.google.com/c/NzM3ODI3ODEwMTMz/gb/sort-name/default",
+  "2DO CREATIVE": "https://classroom.google.com/c/NzM3ODI4Mzk1MDEy/gb/sort-name/default",
+  "2DO NOBLE": "https://classroom.google.com/c/NzM3ODI4MDI2MzI0/gb/sort-name/default",
+  "2DO CHEERFUL": "https://classroom.google.com/c/NzUwMzYzNTYwOTY0/gb/sort-name/default",
+  "3RO CREATIVE": "https://classroom.google.com/c/NzUwMzY5NjAxNjQy/gb/sort-name/default",
+  "2DO COMPETITIVE": "https://classroom.google.com/c/NzUwMzYxNjE1MDg2/gb/sort-name/default",
+  "2DO GIFTED": "https://classroom.google.com/c/NzUwMzYyOTM3NTg3/gb/sort-name/default",
+  "1RO DOER": "https://classroom.google.com/c/NzM3ODI2NjU1ODUz/gb/sort-name/default",
+  "2DO HONEST": "https://classroom.google.com/c/NzM3ODI3NDc0NjE2/gb/sort-name/default",
+  "2DO POLITE": "https://classroom.google.com/c/NzUwMzY1NjE3NTA4/gb/sort-name/default",
+  "1RO KIND": "https://classroom.google.com/c/NzUwMzYyMDE2NDc4/gb/sort-name/default",
+  "2DO DOER": "https://classroom.google.com/c/NzUwMzY0Mjk2OTY2/gb/sort-name/default",
+  "1RO CHEERFUL": "https://classroom.google.com/c/NzM3ODI2ODQwODU4/gb/sort-name/default"
+};
+
+// Enlaces de registro
+const enlacesRegistro = {
+  "1RO COMPETITIVE": "registro-wise.html",
+  "2DO KIND": "registro-kind.html",
+  "3RO FAIR": "registro-fun.html",
+  "3RO HONEST": "registro-fair.html",
+  "1RO WISE": "registro-cool.html",
+  "3RO KIND": "registro-best.html",
+  "3RO NOBLE": "registro-creative.html",
+  "2DO WISE": "registro-strong.html",
+  "1RO LEADER": "registro-winner.html",
+  "3RO COMPETITIVE": "registro-gifted.html",
+  "3RO POLITE": "registro-nice.html",
+  "1RO NOBLE": "registro-super.html",
+  "3RO LEADER": "registro-happy.html",
+  "3RO DOER": "registro-smart.html",
+  "2DO FAIR": "aulas/smart.html",
+  "1RO POLITE": "aulas/smart.html",
+  "1RO FAIR": "aulas/smart.html",
+  "3RO CHEERFUL": "aulas/smart.html",
+  "1RO HONEST": "aulas/smart.html",
+  "1RO GIFTED": "aulas/smart.html",
+  "3RO GIFTED": "aulas/smart.html",
+  "1RO CREATIVE": "aulas/smart.html",
+  "3RO WISE": "aulas/smart.html",
+  "2DO CREATIVE": "aulas/smart.html",
+  "2DO NOBLE": "aulas/smart.html",
+  "2DO CHEERFUL": "aulas/smart.html",
+  "3RO CREATIVE": "aulas/smart.html",
+  "2DO COMPETITIVE": "aulas/smart.html",
+  "2DO GIFTED": "aulas/smart.html",
+  "1RO DOER": "aulas/smart.html",
+  "2DO HONEST": "aulas/smart.html",
+  "2DO POLITE": "aulas/smart.html",
+  "1RO KIND": "aulas/smart.html",
+  "2DO DOER": "aulas/cheerful.html",
+  "1RO CHEERFUL": "registro-bright.html"
+};
+
+// Enlaces de asistencia
+const enlacesAsistencia = {
+  "1RO COMPETITIVE": "asistencia-wise.html",
+  "2DO KIND": "asistencia-kind.html",
+  "3RO FAIR": "asistencia-fun.html",
+  "3RO HONEST": "asistencia-fair.html",
+  "1RO WISE": "asistencia-cool.html",
+  "3RO KIND": "asistencia-best.html",
+  "3RO NOBLE": "asistencia-creative.html",
+  "2DO WISE": "asistencia-strong.html",
+  "1RO LEADER": "asistencia-winner.html",
+  "3RO COMPETITIVE": "asistencia-gifted.html",
+  "3RO POLITE": "asistencia-nice.html",
+  "1RO NOBLE": "asistencia-super.html",
+  "3RO LEADER": "asistencia-happy.html",
+  "3RO DOER": "asistencia-smart.html",
+  "2DO FAIR": "aulas/smart.html",
+  "1RO POLITE": "aulas/smart.html",
+  "1RO FAIR": "aulas/smart.html",
+  "3RO CHEERFUL": "aulas/smart.html",
+  "1RO HONEST": "aulas/smart.html",
+  "1RO GIFTED": "aulas/smart.html",
+  "3RO GIFTED": "aulas/smart.html",
+  "1RO CREATIVE": "aulas/smart.html",
+  "3RO WISE": "aulas/smart.html",
+  "2DO CREATIVE": "aulas/smart.html",
+  "2DO NOBLE": "aulas/smart.html",
+  "2DO CHEERFUL": "aulas/smart.html",
+  "3RO CREATIVE": "aulas/smart.html",
+  "2DO COMPETITIVE": "aulas/smart.html",
+  "2DO GIFTED": "aulas/smart.html",
+  "1RO DOER": "aulas/smart.html",
+  "2DO HONEST": "aulas/smart.html",
+  "2DO POLITE": "aulas/smart.html",
+  "1RO KIND": "aulas/smart.html",
+  "2DO DOER": "aulas/cheerful.html",
+  "1RO CHEERFUL": "asistencia-bright.html"
 };
 
 // ---------------------------
@@ -83,7 +199,7 @@ function generarAgenda(diaSel="todos"){
   horas.forEach((r,i)=>{
     const bloque = document.createElement("div");
     bloque.className = "bloque";
-    bloque.dataset.fila = i; // clave fila
+    bloque.dataset.fila = i;
 
     // hora
     const h = document.createElement("div");
@@ -91,7 +207,6 @@ function generarAgenda(diaSel="todos"){
     h.textContent = `${r[0]} - ${r[1]}`;
     bloque.appendChild(h);
 
-    // si mostramos todos los días: creamos un .dia-item por cada día
     if(diaSel === "todos"){
       for(let d=1; d<=5; d++){
         const diaItem = document.createElement("div");
@@ -103,18 +218,44 @@ function generarAgenda(diaSel="todos"){
         label.textContent = `${diaNombre(d)}: `;
 
         const aulaNombre = aulas[d][i];
+
+        // botón principal
         const enlace = document.createElement("a");
         enlace.className = "aula-boton";
         enlace.href = enlacesAulas[aulaNombre] || "#";
         enlace.textContent = aulaNombre;
-        enlace.setAttribute("aria-label", `${aulaNombre} - ${diaNombre(d)} ${r[0]}-${r[1]}`);
 
         diaItem.appendChild(label);
         diaItem.appendChild(enlace);
+
+        // 📌 botones secundarios
+        const opciones = document.createElement("div");
+        opciones.className = "opciones-aula";
+
+        const sub1 = document.createElement("a");
+        sub1.className = "opcion-boton";
+        sub1.textContent = "Calificaciones";
+        sub1.href = enlacesCalificaciones[aulaNombre] || "#";
+
+        const sub2 = document.createElement("a");
+        sub2.className = "opcion-boton";
+        sub2.textContent = "Registro";
+        sub2.href = enlacesRegistro[aulaNombre] || "#";
+
+        const sub3 = document.createElement("a");
+        sub3.className = "opcion-boton";
+        sub3.textContent = "Asistencia";
+        sub3.href = enlacesAsistencia[aulaNombre] || "#";
+
+        opciones.appendChild(sub1);
+        opciones.appendChild(sub2);
+        opciones.appendChild(sub3);
+
+        diaItem.appendChild(opciones);
+
         bloque.appendChild(diaItem);
       }
     } else {
-      // vista por día: un solo dia-item por bloque
       const diaItem = document.createElement("div");
       diaItem.className = "dia-item";
       diaItem.dataset.dia = diaSel;
@@ -124,20 +265,57 @@ function generarAgenda(diaSel="todos"){
       enlace.className = "aula-boton";
       enlace.href = enlacesAulas[aulaNombre] || "#";
       enlace.textContent = aulaNombre;
-      enlace.setAttribute("aria-label", `${aulaNombre} - ${diaNombre(diaSel)} ${r[0]}-${r[1]}`);
 
       diaItem.appendChild(enlace);
+
+      // 📌 botones secundarios
+      const opciones = document.createElement("div");
+      opciones.className = "opciones-aula";
+
+      const sub1 = document.createElement("a");
+      sub1.className = "opcion-boton";
+      sub1.textContent = "Calificaciones";
+      sub1.href = enlacesCalificaciones[aulaNombre] || "#";
+
+      const sub2 = document.createElement("a");
+      sub2.className = "opcion-boton";
+      sub2.textContent = "Registro";
+      sub2.href = enlacesRegistro[aulaNombre] || "#";
+
+      const sub3 = document.createElement("a");
+      sub3.className = "opcion-boton";
+      sub3.textContent = "Asistencia";
+      sub3.href = enlacesAsistencia[aulaNombre] || "#";
+
+      opciones.appendChild(sub1);
+      opciones.appendChild(sub2);
+      opciones.appendChild(sub3);
+
+      diaItem.appendChild(opciones);
+
       bloque.appendChild(diaItem);
     }
 
     agenda.appendChild(bloque);
   });
 
-  // una vez que la agenda está en el DOM:
   resaltarHora();
-  attachContextHandlers(); // para cada .dia-item
-  cargarNotas(); // carga notas (desde API o local)
+  attachContextHandlers();
+  cargarNotas();
 }
+
+// ---------------------------
+// Resto del código (resaltado, notas, controles...)
+// ---------------------------
+// ⚠️ Aquí mantenemos igual todo lo que ya tenías:
+// - resaltarHora()
+// - actualizarMensaje()
+// - attachContextHandlers()
+// - cargarNotas(), guardarNota()
+// - cargarNotasLocal(), guardarNotaLocal()
+// - inicialización DOMContentLoaded
+// ---------------------------
+
 
 // ---------------------------
 // Resaltar hora actual
@@ -370,7 +548,3 @@ window.addEventListener("DOMContentLoaded", ()=>{
     console.warn("API_URL no configurada: acciones de notas usarán localStorage hasta que pegues la URL de Apps Script.");
   }
 });
-
-
-
-
