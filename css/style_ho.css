@@ -76,7 +76,7 @@ body.dark .mensaje-dia{ background:#333; color:#eee; border-left:5px solid #FFA0
 .agenda{
   max-width:800px;
   margin:20px auto;
-  padding:0 15px; /* aire lateral extra */
+  padding:10px;
 }
 .bloque{
   margin-bottom:16px;
@@ -85,54 +85,86 @@ body.dark .mensaje-dia{ background:#333; color:#eee; border-left:5px solid #FFA0
   background:#fff;
   box-shadow:0 2px 6px rgba(0,0,0,0.1);
   position:relative;
+  text-align:center;
 }
 body.dark .bloque{ background:#2d2d2d; }
 .bloque.hora-actual{ border:2px solid #FF8F00; animation:pulse 2s infinite; }
 
-.hora{ font-weight:700; margin-bottom:6px; }
-.dia{ font-size:14px; margin-top:4px; }
-.aula{ font-size:14px; font-weight:500; margin-top:2px; }
+.hora{ font-weight:700; margin-bottom:6px; text-align:center; }
+.dia, .aula {
+  text-align:center;
+  margin-top:6px;
+}
 
-/* 🔗 Aulas como botones */
-.aula-boton{
-  display:inline-block;
-  margin-left:6px;
-  padding:5px 12px;
-  border-radius:6px;
-  background:var(--amarillo);
-  color:#222;
+/* 🔗 Botón principal de aula */
+.aula-boton {
+  display:block;
+  max-width:220px;
+  margin:8px auto;
+  padding:10px 14px;
+  border-radius:8px;
+  background:#FFF3BF;      /* amarillo pastel muy claro */
+  color:#333;
   text-decoration:none;
   font-weight:600;
-  box-shadow:0 1px 3px rgba(0,0,0,.15);
-  transition:.3s;
+  text-align:center;
+  transition:0.3s;
+  box-shadow:0 1px 3px rgba(0,0,0,0.08);
 }
-.aula-boton:hover{
-  background:var(--amarillo-osc);
+.aula-boton:hover {
+  background:#FFE066;
   color:#000;
 }
-body.dark .aula-boton{
+body.dark .aula-boton {
   background:#444;
-  color:var(--amarillo);
+  color:#FFD93D;
 }
-body.dark .aula-boton:hover{
+body.dark .aula-boton:hover {
   background:#666;
+  color:#fff;
+}
+
+/* 📌 Botones secundarios (Calificaciones, Registro, Asistencia) */
+.opciones-aula {
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  margin-top:6px;
+}
+.opcion-boton {
+  padding:6px 10px;
+  border-radius:6px;
+  background:#F8F9FA;   /* gris claro */
+  color:#333;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:600;
+  transition:0.3s;
+}
+.opcion-boton:hover {
+  background:#E9ECEF;
+}
+body.dark .opcion-boton {
+  background:#555;
+  color:#FFD93D;
+}
+body.dark .opcion-boton:hover {
+  background:#777;
   color:#fff;
 }
 
 /* 📝 Notas */
 .nota{
   margin-top:6px;
-  font-size:13px;
-  color:#444;
+  font-size:12px;
+  color:#555;
   background:#fff8e1;
-  padding:5px 8px;
+  padding:4px 6px;
   border-radius:6px;
-  display:inline-block;
-  box-shadow:0 1px 2px rgba(0,0,0,.1);
 }
-body.dark .nota{ background:#444; color:#eee; }
+body.dark .nota{ background:#444; color:#ddd; }
 
-/* Botón flotante */
+/* ⚡ Botón flotante */
 .btn-flotante{
   position:fixed;
   bottom:20px;
@@ -148,7 +180,7 @@ body.dark .nota{ background:#444; color:#eee; }
 }
 .btn-flotante:hover{ background:var(--amarillo-osc); }
 
-/* Animación */
+/* ✨ Animación */
 @keyframes pulse{
   0%{ box-shadow:0 0 5px #FF8F00; }
   50%{ box-shadow:0 0 15px #FF8F00; }
