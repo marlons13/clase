@@ -31,7 +31,7 @@ const enlacesAulas = {
   "2DO KIND": "https://classroom.google.com/w/NzM3ODI3NzYzOTM5/t/all",
   "3RO FAIR": "https://classroom.google.com/w/NzUwMzY2Mjk1Mjkw/t/all",
   "3RO HONEST": "https://classroom.google.com/w/NzM3ODI5MTUzODM3/t/all",
-  "1RO WISE": "https://classroom.google.com/w/NzM3ODI5MTUzODM3/t/all",
+  "1RO WISE": "https://classroom.google.com/w/NzM3ODI3MDc4MTQ0/t/all",
   "3RO KIND": "https://classroom.google.com/w/NzM3ODI3ODE1Njk2/t/all",
   "3RO NOBLE": "https://classroom.google.com/w/NzUwMzY5NjgzODQ1/t/all",
   "2DO WISE": "https://classroom.google.com/w/NzM3ODI4MDUzNDkx/t/all",
@@ -548,3 +548,4 @@ window.addEventListener("DOMContentLoaded", ()=>{
     console.warn("API_URL no configurada: acciones de notas usarán localStorage hasta que pegues la URL de Apps Script.");
   }
 });
+
