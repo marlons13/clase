@@ -70,7 +70,7 @@ const enlacesCalificaciones = {
   "2DO KIND": "https://classroom.google.com/c/NzM3ODI3NzYzOTM5/gb/sort-last-name/default",
   "3RO FAIR": "https://classroom.google.com/c/NzUwMzY2Mjk1Mjkw/gb/sort-name/default",
   "3RO HONEST": "https://classroom.google.com/c/NzM3ODI5MTUzODM3/gb/sort-name/default",
-  "1RO WISE": "https://classroom.google.com/c/NzM3ODI5MTUzODM3/gb/sort-name/default",
+  "1RO WISE": "https://classroom.google.com/c/NzM3ODI3MDc4MTQ0/gb/sort-last-name/default",
   "3RO KIND": "https://classroom.google.com/c/NzM3ODI3ODE1Njk2/gb/sort-name/default",
   "3RO NOBLE": "https://classroom.google.com/c/NzUwMzY5NjgzODQ1/gb/sort-name/default",
   "2DO WISE": "https://classroom.google.com/c/NzM3ODI4MDUzNDkx/gb/sort-name/default",
@@ -548,4 +548,5 @@ window.addEventListener("DOMContentLoaded", ()=>{
     console.warn("API_URL no configurada: acciones de notas usarán localStorage hasta que pegues la URL de Apps Script.");
   }
 });
+
 
