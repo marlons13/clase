@@ -224,6 +224,7 @@ function generarAgenda(diaSel="todos"){
         enlace.className = "aula-boton";
         enlace.href = enlacesAulas[aulaNombre] || "#";
         enlace.textContent = aulaNombre;
+        enlace.target = "_blank";   // 👉 abre en pestaña nueva
 
         diaItem.appendChild(label);
         diaItem.appendChild(enlace);
@@ -236,16 +237,19 @@ function generarAgenda(diaSel="todos"){
         sub1.className = "opcion-boton";
         sub1.textContent = "Calificaciones";
         sub1.href = enlacesCalificaciones[aulaNombre] || "#";
+        sub1.target = "_blank";   // 👉 abre en pestaña nueva
 
         const sub2 = document.createElement("a");
         sub2.className = "opcion-boton";
         sub2.textContent = "Registro";
         sub2.href = enlacesRegistro[aulaNombre] || "#";
+        sub2.target = "_blank";   // 👉 abre en pestaña nueva
 
         const sub3 = document.createElement("a");
         sub3.className = "opcion-boton";
         sub3.textContent = "Asistencia";
         sub3.href = enlacesAsistencia[aulaNombre] || "#";
+        sub3.target = "_blank";   // 👉 abre en pestaña nueva
 
         opciones.appendChild(sub1);
         opciones.appendChild(sub2);
@@ -548,5 +552,6 @@ window.addEventListener("DOMContentLoaded", ()=>{
     console.warn("API_URL no configurada: acciones de notas usarán localStorage hasta que pegues la URL de Apps Script.");
   }
 });
+
 
 
