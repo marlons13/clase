@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dado Pikachu 🎲</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body {
+    background-color: #FFEB3B;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.8s ease;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .scene {
+    width: 200px;
+    height: 200px;
+    perspective: 1000px;
+  }
+
+  .cube {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 1.5s ease-out;
+  }
+
+  .face {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: #FFF176;
+    border: 3px solid #FBC02D;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    justify-items: center;
+    align-items: center;
+    box-shadow: inset 0 0 25px rgba(0,0,0,0.15);
+  }
+
+  .dot {
+    width: 24px;
+    height: 24px;
+    background: #E53935;
+    border-radius: 50%;
+  }
+
+  /* Posiciones de las caras */
+  .front  { transform: rotateY(0deg) translateZ(100px); }
+  .back   { transform: rotateY(180deg) translateZ(100px); }
+  .right  { transform: rotateY(90deg) translateZ(100px); }
+  .left   { transform: rotateY(-90deg) translateZ(100px); }
+  .top    { transform: rotateX(90deg) translateZ(100px); }
+  .bottom { transform: rotateX(-90deg) translateZ(100px); }
+</style>
+</head>
+<body>
+
+  <div class="scene">
+    <div class="cube" id="cube">
+      <!-- Cara 1 -->
+      <div class="face front">
+        <div></div><div></div><div></div>
+        <div></div><div class="dot"></div><div></div>
+        <div></div><div></div><div></div>
+      </div>
+
+      <!-- Cara 2 -->
+      <div class="face back">
+        <div class="dot"></div><div></div><div></div>
+        <div></div><div></div><div></div>
+        <div></div><div></div><div class="dot"></div>
+      </div>
+
+      <!-- Cara 3 -->
+      <div class="face right">
+        <div class="dot"></div><div></div><div></div>
+        <div></div><div class="dot"></div><div></div>
+        <div></div><div></div><div class="dot"></div>
+      </div>
+
+      <!-- Cara 4 -->
+      <div class="face left">
+        <div class="dot"></div><div></div><div class="dot"></div>
+        <div></div><div></div><div></div>
+        <div class="dot"></div><div></div><div class="dot"></div>
+      </div>
+
+      <!-- Cara 5 -->
+      <div class="face top">
+        <div class="dot"></div><div></div><div class="dot"></div>
+        <div></div><div class="dot"></div><div></div>
+        <div class="dot"></div><div></div><div class="dot"></div>
+      </div>
+
+      <!-- Cara 6 -->
+      <div class="face bottom">
+        <div class="dot"></div><div></div><div class="dot"></div>
+        <div class="dot"></div><div></div><div class="dot"></div>
+        <div class="dot"></div><div></div><div class="dot"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const cube = document.getElementById('cube');
+
+const orientations = {
+  1: {x: 0, y: 0},
+  2: {x: -90, y: 0},
+  3: {x: 0, y: 90},
+  4: {x: 0, y: -90},
+  5: {x: 90, y: 0},
+  6: {x: 180, y: 0}
+};
+
+let lastFace = 1;
+let rolling = false;
+
+function lanzar() {
+  if (rolling) return;
+  rolling = true;
+
+  let newFace;
+  do {
+    newFace = Math.floor(Math.random() * 6) + 1;
+  } while (newFace === lastFace);
+  lastFace = newFace;
+
+  // Rota varias vueltas y termina exactamente en la cara elegida
+  const extraX = 360 * (Math.floor(Math.random() * 3) + 2);
+  const extraY = 360 * (Math.floor(Math.random() * 3) + 2);
+  const rotX = extraX + orientations[newFace].x;
+  const rotY = extraY + orientations[newFace].y;
+
+  cube.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+
+  setTimeout(() => rolling = false, 1600);
+}
+
+document.body.addEventListener('click', lanzar);
+window.addEventListener('keydown', e => { if (e.code === 'Space') lanzar(); });
+</script>
+</body>
+</html>
