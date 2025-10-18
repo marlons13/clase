@@ -6,32 +6,22 @@
   <title>Reloj Pikachu</title>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&family=Caveat:wght@600&display=swap" rel="stylesheet">
   <style>
-    body {
+    html, body {
+      height: 100%;
+      width: 100%;
       margin: 0;
+      padding: 0;
+    }
+
+    body {
       background-color: #fdf060;
       font-family: 'Rubik', sans-serif;
       overflow: hidden;
-    }
-
-    #background {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: repeating-linear-gradient(
-        120deg,
-        rgba(255, 255, 255, 0.1) 0px,
-        rgba(255, 255, 255, 0.1) 4px,
-        transparent 4px,
-        transparent 40px
-      );
-      animation: slideRays 20s linear infinite;
-      z-index: 0;
-    }
-
-    @keyframes slideRays {
-      from { background-position: 0 0; }
-      to   { background-position: 600px 600px; }
+      background-image: url('img/fondo.svg'); /* 🔹 Imagen de ejemplo */
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
 
     #center-content {
@@ -169,6 +159,11 @@
 
     /* 📱 Ajustes responsive para móviles */
     @media (max-width: 768px) {
+      body {
+        background-size: cover;
+        background-position: center;
+      }
+
       #menu-toggle, #fullscreen-btn {
         top: 3vw;
         padding: 2vw;
@@ -216,8 +211,6 @@
   </style>
 </head>
 <body>
-  <div id="background"></div>
-
   <!-- Menú -->
   <div id="menu-toggle">
     <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 24 24">
@@ -242,7 +235,6 @@
 
   <!-- Contenido principal -->
   <div id="center-content">
-    <img id="pikachu-icon" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" alt="Pikachu" />
     <div id="clock">
       <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
     </div>
