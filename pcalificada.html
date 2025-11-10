@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cómputo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&family=Caveat:wght@600&family=Kanit:wght@700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.png" type="image/x-icon">
+  <style>
+    :root {
+      --yellow: #fdf060;
+      --red: #e53935;
+      --brown: #6b4c2f;
+      --black: #1c1c1c;
+      --white: #fff;
+      --light-yellow: #fffde7;
+      --orange: #fbc02d;
+    }
+    body {
+      margin: 0;
+      font-family: 'Rubik', sans-serif;
+      color: var(--black);
+      text-align: center;
+      background: linear-gradient(to bottom right, var(--yellow), var(--light-yellow));
+    }
+    header {
+      padding: 5vh 1vw 2vh;
+    }
+    header h1 {
+      font-family: 'Rubik Mono One', monospace;
+      font-size: 4vw;
+      margin: 0 0 2vh;
+      color: var(--red);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    .info-interactiva {
+      margin-bottom: 4vh;
+      background: linear-gradient(145deg, var(--light-yellow), #fffdf5);
+      border: 3px dashed var(--orange);
+      padding: 2.5vh 3vw;
+      border-radius: 16px;
+      display: inline-block;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+    .info-interactiva input {
+      padding: 1vh;
+      font-size: 1.1rem;
+      border: 2px solid var(--brown);
+      border-radius: 8px;
+      margin: 1vh 0;
+      width: 180px;
+      text-align: center;
+      background-color: #fff;
+      box-shadow: inset 1px 1px 4px rgba(0,0,0,0.1);
+      font-style: italic;
+      color: var(--black);
+      opacity: 0.8;
+    }
+    .info-interactiva button {
+      padding: 1vh 2vw;
+      font-size: 1rem;
+      background: var(--orange);
+      border: 2px solid var(--brown);
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      color: var(--black);
+    }
+    .info-interactiva button:hover {
+      background: var(--yellow);
+      transform: scale(1.05);
+      box-shadow: 0 0 10px var(--orange);
+    }
+    .correo-texto {
+      font-size: 1.1rem;
+      margin-top: 1vh;
+      color: var(--black);
+      font-weight: 600;
+    }
+    .pikachu-img {
+      width: min(100px, 20vw);
+      height: auto;
+      display: block;
+      margin: 2vh auto 2vh;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2vh 1vw;
+      gap: 2vw;
+    }
+    .column {
+      flex: 1 1 300px;
+      max-width: 360px;
+      background: var(--white);
+      border: 2px solid var(--brown);
+      border-radius: 12px;
+      padding: 2vh 1vw;
+      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+      animation: slideIn 0.8s ease-in;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .column:hover {
+      transform: translateY(-6px);
+      box-shadow: 6px 6px 14px rgba(0, 0, 0, 0.25);
+    }
+    @keyframes slideIn {
+      0% { opacity: 0; transform: translateY(40px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .section-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.5rem;
+      margin-bottom: 1.5vh;
+      color: var(--red);
+      text-shadow: 1px 1px 2px #d4aa00;
+    }
+    .pikabtn {
+      display: inline-block;
+      padding: 1vh 1.5vw;
+      background: var(--orange);
+      border: 2px solid var(--brown);
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-bottom: 1.5vh;
+      animation: pulse 1.5s infinite;
+      color: var(--black);
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+    .pikabtn:hover {
+      background: var(--yellow);
+      transform: scale(1.05);
+      box-shadow: 0 0 10px var(--orange);
+    }
+    .pikabtn.active {
+      background: var(--red);
+      color: var(--white);
+      border-color: var(--red);
+    }
+    .btn-grid {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.6s ease, opacity 0.5s ease, transform 0.5s ease;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1vh;
+      margin-top: 0;
+      opacity: 0;
+      transform: scaleY(0.95);
+    }
+    .btn-grid.active {
+      max-height: 2000px;
+      margin-top: 1vh;
+      opacity: 1;
+      transform: scaleY(1);
+    }
+    .btn-classroom {
+      padding: 1.2vh 1vw;
+      font-size: 1rem;
+      border: 2px solid var(--brown);
+      border-radius: 10px;
+      background-color: var(--light-yellow);
+      color: var(--black);
+      text-decoration: none;
+      transition: all 0.25s ease;
+      text-align: center;
+      font-weight: bold;
+    }
+    .btn-classroom:hover {
+      background-color: var(--red);
+      color: var(--white);
+      border-color: var(--red);
+    }
+    .quote {
+      font-family: 'Caveat', cursive;
+      font-size: 3.8rem;
+      margin: 5vh auto 4vh;
+      color: var(--brown);
+      max-width: 90%;
+      text-align: center;
+    }
+    .toast {
+      visibility: hidden;
+      min-width: 200px;
+      background-color: var(--brown);
+      color: var(--white);
+      text-align: center;
+      border-radius: 8px;
+      padding: 1vh 2vw;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      bottom: 5vh;
+      transform: translateX(-50%);
+      font-size: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: visibility 0s, opacity 0.5s ease-in-out;
+      opacity: 0;
+    }
+    .toast.show {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CÓMPUTO</h1>
+  </header>
+  <div class="info-interactiva">
+    <label for="dni">🔐 Ingresa tu DNI:</label><br>
+    <input type="text" id="dni" name="dni" placeholder="12345678" maxlength="8" oninput="actualizarCorreo()" inputmode="numeric" pattern="[0-9]{8}">
+    <button onclick="copiarCorreo()">📋 Copiar correo</button>
+    <p id="correoGenerado" class="correo-texto">Tu correo aparecerá aquí</p>
+    <div id="toast" class="toast"></div>
+  </div>
+  <img class="pikachu-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" alt="Pikachu" />
+  <div class="container" id="contenedor-aulas"></div>
+  <p class="quote">"El aprendizaje es un tesoro que te seguirá a todas partes"</p>
+  <script>
+    const enlaces = {
+      "1ro-competitive": "https://forms.gle/UuBGxGamBCfHDZrJ6",
+      "1ro-wise": "https://forms.gle/niQJitLEFoZBzJ6o8",
+      "1ro-leader": "https://forms.gle/G7KPg6DpiMBvn9XZ6",
+      "1ro-noble": "https://forms.gle/wrZBVySTm8Q2ENmN8",
+      "1ro-polite": "https://forms.gle/BW5Uc1JSyjTA9Ss69",
+      "1ro-fair": "https://forms.gle/pdQhWJ9YN8RQKfhA7",
+      "1ro-honest": "https://forms.gle/EjX7NY3NgUVXXjA38",
+      "1ro-doer": "https://forms.gle/3JRekQscseyUthC87",
+      "1ro-creative": "https://forms.gle/PNeGzSWkHf1iwZq7A",
+      "1ro-gifted": "https://forms.gle/U2kr4mJZURwp5bvy9",
+      "1ro-kind": "https://forms.gle/axXsBtfrSdGQQ4Gf8",
+      "1ro-cheerful": "https://forms.gle/fpQv54iyLdsiwZUQA",
+      "2do-kind": "https://forms.gle/ogAFxdGE7MFPYvE6A",
+      "2do-wise": "https://forms.gle/BdW9wzrCHEou6sFa8",
+      "2do-fair": "https://forms.gle/8k6t1rs4oLxqexDu6",
+      "2do-creative": "https://forms.gle/Q1j1XXdjMMfewFti8",
+      "2do-noble": "https://forms.gle/KybHtBBFEbRXMswL7 ",
+      "2do-cheerful": "https://forms.gle/2H257HXW2Qa45HAWA",
+      "2do-competitive": "https://forms.gle/6vsWhEjHrtQpUaYM9",
+      "2do-gifted": "https://forms.gle/gghpdQLWqJse9UcQ8",
+      "2do-honest": "https://forms.gle/nM4AmYq2o85kpt4m6",
+      "2do-polite": "https://forms.gle/awSq4DyrnjxirxG46",
+      "2do-doer": "https://forms.gle/MV28pxNzhzGMmMPv9",
+      "3ro-fair": "https://forms.gle/9ZBwGSXuHazNv3Vc8",
+      "3ro-honest": "https://forms.gle/9HmdFHxxPZSEYdDz9",
+      "3ro-kind": "https://forms.gle/DhQUkMA5DYHAuRYG8",
+      "3ro-noble": "https://forms.gle/yf6amnNf6XRaiUuD8",
+      "3ro-competitive": "https://forms.gle/H7FjR7PRGnmaJ6GS7",
+      "3ro-polite": "https://forms.gle/67YoQ6ZmuWFMnWpJ7",
+      "3ro-leader": "https://forms.gle/761spPf1KDZ5TTCs9",
+      "3ro-doer": "https://forms.gle/GowG2zTMRUmB3nTH6",
+      "3ro-cheerful": "https://forms.gle/KXsHqSir9TwW26YE8",
+      "3ro-gifted": "https://forms.gle/ZbpNgdLKa3UxCN3o7",
+      "3ro-wise": "https://forms.gle/HJayTdJUmxLsUomaA",
+      "3ro-creative": "https://forms.gle/Fy9sCvYVN8EUMBAb9",
+      "3ro-loyal": "https://forms.gle/gG7zGK5LVCqaP9QN6"
+    };
+
+    const niveles = [
+      { grado: "PRIMER AÑO", id: "aulas1", gradoKey: "1ro", aulas: ["Competitive", "Wise", "Leader", "Noble", "Polite", "Fair", "Honest", "Doer", "Creative", "Gifted", "Kind", "Cheerful"] },
+      { grado: "SEGUNDO AÑO", id: "aulas2", gradoKey: "2do", aulas: ["Kind", "Wise", "Fair", "Creative", "Noble", "Cheerful", "Competitive", "Gifted", "Honest", "Polite", "Doer"] },
+      { grado: "TERCER AÑO", id: "aulas3", gradoKey: "3ro", aulas: ["Fair", "Honest", "Kind", "Noble", "Competitive", "Polite", "Leader", "Doer", "Cheerful", "Gifted", "Wise", "Creative", "Loyal"] }
+    ];
+
+    const contenedor = document.getElementById("contenedor-aulas");
+    niveles.forEach(nivel => {
+      const div = document.createElement("div");
+      div.className = "column";
+      const botones = nivel.aulas.map(nombre => {
+        const key = `${nivel.gradoKey}-${nombre.toLowerCase()}`;
+        const url = enlaces[key] || "#";
+        return `<a class="btn-classroom" href="${url}" target="_blank">📘 ${nivel.gradoKey} ${nombre}</a>`;
+      }).join("");
+      div.innerHTML = `
+        <div class="section-title">${nivel.grado}</div>
+        <div class="pikabtn" onclick="toggleAulas('${nivel.id}', this)">⚡ Ver aulas</div>
+        <div class="btn-grid" id="${nivel.id}">
+          ${botones}
+        </div>
+      `;
+      contenedor.appendChild(div);
+    });
+
+    function toggleAulas(id, btn) {
+      const section = document.getElementById(id);
+      section.classList.toggle("active");
+      btn.classList.toggle("active");
+    }
+
+    function actualizarCorreo() {
+      const dni = document.getElementById('dni').value;
+      const salida = document.getElementById('correoGenerado');
+      if (dni.length === 8 && /^\d+$/.test(dni)) {
+        salida.textContent = `Tu correo es: ${dni}@trilce.edu.pe`;
+      } else {
+        salida.textContent = 'Tu correo aparecerá aquí';
+      }
+    }
+
+    function copiarCorreo() {
+      const dni = document.getElementById('dni').value;
+      if (dni.length === 8 && /^\d+$/.test(dni)) {
+        const correo = `${dni}@trilce.edu.pe`;
+
+        // Si está disponible navigator.clipboard y es HTTPS
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(correo)
+            .then(() => mostrarToast('¡Correo copiado al portapapeles!'))
+            .catch(() => mostrarToast('Error al copiar. Intenta manualmente.'));
+        } else {
+          // Método alternativo para HTTP o navegadores viejos
+          const tempInput = document.createElement("input");
+          tempInput.value = correo;
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand("copy");
+          document.body.removeChild(tempInput);
+          mostrarToast('¡Correo copiado al portapapeles!');
+        }
+      } else {
+        mostrarToast('DNI inválido. Debe tener 8 dígitos.');
+      }
+    }
+
+    function mostrarToast(mensaje) {
+      const toast = document.getElementById('toast');
+      toast.textContent = mensaje;
+      toast.className = 'toast show';
+      setTimeout(() => {
+        toast.className = 'toast';
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
