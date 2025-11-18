@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Temario</title>
+<style>
+    :root {
+        --orange: #f24c0a;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: var(--orange);
+        font-family: Arial, Helvetica, sans-serif;
+        color: #fff;
+        text-align: center;
+    }
+
+    /* PESTAÑAS */
+    .tabs-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .tabs {
+        display: flex;
+        gap: 10px;
+    }
+
+    .tab {
+        padding: 10px 25px;
+        border-radius: 6px;
+        border: none;
+        background-color: #ffffff55;
+        cursor: pointer;
+        font-weight: bold;
+        color: white;
+        transition: 0.2s;
+    }
+
+    .tab.active {
+        background-color: white;
+        color: var(--orange);
+    }
+
+    /* CONTENIDO */
+    .content {
+        width: 80%;
+        max-width: 900px;
+        margin: 30px auto 0 auto; /* Ajusta el margen superior aquí */
+        background-color: var(--orange);
+        padding: 50px;
+        border-radius: 10px;
+        border: 3px solid #ffffff; /* borde blanco suave */
+    
+    }
+
+    .section-title {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .info {
+        display: flex;
+        justify-content: center;
+        gap: 100px;
+        margin-top: 40px;
+        font-size: 1.3rem;
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .logo {
+        margin-top: 40px;
+    }
+</style>
+</head>
+<body>
+
+<!-- PESTAÑAS -->
+<div class="tabs-wrapper">
+    <div class="tabs">
+        <button class="tab active" onclick="openTab('year1', this)">1er Año</button>
+        <button class="tab" onclick="openTab('year2', this)">2do Año</button>
+        <button class="tab" onclick="openTab('year3', this)">3er Año</button>
+    </div>
+</div>
+
+<!-- CONTENIDO GENERAL -->
+<div class="content">
+
+    <!-- AÑO 1 -->
+    <div id="year1" class="tab-content active">
+        <h1>Curso:</h1>
+        <h1 class="section-title">COMPUTACIÓN</h1>
+        <h1>Tema:</h1>
+        <h1>ANIMANDO DIAPOSITIVAS</h1>
+
+        <div class="info">
+            <div>
+                <strong>Grado:</strong><br>
+                <span style="font-size: 35px;">1ro</span>
+            </div>
+            <div>
+                <strong>Semana:</strong><br>
+                <span style="font-size: 35px;">37</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- AÑO 2 -->
+    <div id="year2" class="tab-content">
+        <h1>Curso:</h1>
+        <h1 class="section-title">COMPUTACIÓN</h1>
+        <h1>Tema:</h1>
+        <h1>VECTORIZACIÓN DE IMÁGENES Y FILTROS</h1>
+
+        <div class="info">
+            <div>
+                <strong>Grado:</strong><br>
+                <span style="font-size: 35px;">2do</span>
+            </div>
+            <div>
+                <strong>Semana:</strong><br>
+                <span style="font-size: 35px;">37</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- AÑO 3 -->
+    <div id="year3" class="tab-content">
+        <h1>Curso:</h1>
+        <h1 class="section-title">COMPUTACIÓN</h1>
+        <h1>Tema:</h1>
+        <h1>NAVES, DISPAROS Y EXPLOSIONES</h1>
+
+        <div class="info">
+            <div>
+                <strong>Grado:</strong><br>
+                <span style="font-size: 35px;">3ro</span>
+            </div>
+            <div>
+                <strong>Semana:</strong><br>
+                <span style="font-size: 35px;">37</span>
+            </div>
+        </div>
+    </div>
+
+<!-- LOGO CENTRADO ABAJO -->
+<div class="logo">
+    <img src="img/logotrilce.png" alt="Logo" style="width:140px;">
+</div>
+
+<script>
+function openTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+</script>
+
+</body>
+</html>
