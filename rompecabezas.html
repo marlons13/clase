@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rompecabezas - Marlon Silva</title>
+  <link rel="stylesheet" href="css/rom_style.css">
+</head>
+<body>
+  <h1>Buscando puntos extra...</h1>
+  <div id="puzzle"></div>
+
+  <!-- Pantalla de victoria -->
+  <div id="win-screen" class="hidden">
+    <div class="message">
+      🎉 ¡Tienes puntos extra!<br />
+      <button id="restart-btn">🔁 Reiniciar</button>
+    </div>
+  </div>
+
+  <!-- Librería de confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="js/rom_script.js"></script>
+</body>
+</html>
